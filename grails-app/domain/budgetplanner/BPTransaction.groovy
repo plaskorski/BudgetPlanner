@@ -1,15 +1,15 @@
 package budgetplanner
 
-class Transaction {
+class BPTransaction {
 
     String name
     Date date
     Long amount
 
-    static belongsTo = [scenario:Scenario]
+    static belongsTo = [scenario:BPScenario]
 
-    static hasOne = [fromAccount:Account,
-                     toAccount:Account]
+    static hasOne = [fromAccount:BPAccount,
+                     toAccount:BPAccount]
 
     static hasMany = [tags:String]
 

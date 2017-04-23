@@ -1,6 +1,6 @@
 package budgetplanner
 
-class TransactionGenerator {
+class BPTransactionGenerator {
 
     String name
     Date startDate
@@ -9,10 +9,10 @@ class TransactionGenerator {
     budgetplanner.IntervalType intervalType
     Long amount
 
-    static belongsTo = [scenario:Scenario]
+    static belongsTo = [scenario:BPScenario]
 
-    static hasOne = [fromAccount:Account,
-                     toAccount:Account]
+    static hasOne = [fromAccount:BPAccount,
+                     toAccount:BPAccount]
 
     static hasMany = [tags:String]
 

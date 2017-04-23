@@ -1,11 +1,11 @@
 package budgetplanner
 
-class User {
+class BPUser {
 
     String name
     Date birthDate
 
-    static hasMany = [scenarios:Scenario]
+    static hasMany = [scenarios:BPScenario]
 
     static constraints = {
         name nullable: false, empty: false

@@ -1,18 +1,18 @@
 package budgetplanner
 
-class Scenario {
+class BPScenario {
 
     String name
     String description
     Date startDate
     Date endDate
 
-    static belongsTo = [user:User]
+    static belongsTo = [user:BPUser]
 
-    static hasMany = [accounts:Account,
-                      transactions:Transaction,
-                      generators:TransactionGenerator,
-                      ledgers:Ledger]
+    static hasMany = [accounts:BPAccount,
+                      transactions:BPTransaction,
+                      generators:BPTransactionGenerator,
+                      ledgers:BPLedger]
 
     static constraints = {
         name nullable: false, empty: false
@@ -25,4 +25,5 @@ class Scenario {
         generators nullable: true, empty: true
         ledgers nullable: true, empty: true
     }
+
 }

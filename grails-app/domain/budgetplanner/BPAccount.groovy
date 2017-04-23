@@ -1,12 +1,12 @@
 package budgetplanner
 
-class Account {
+class BPAccount {
 
     String name
     budgetplanner.AccountType type
     Integer balance
 
-    static belongsTo = [scenario:Scenario]
+    static belongsTo = [scenario:BPScenario]
 
     static constraints = {
         name nullable: false, empty: false
