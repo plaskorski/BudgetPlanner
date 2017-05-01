@@ -7,23 +7,28 @@ class BPScenario {
     Date startDate
     Date endDate
 
-    static belongsTo = [user:BPUser]
+    static belongsTo = [user:User]
+
+    static hasOne = [ledger:BPTable]
 
     static hasMany = [accounts:BPAccount,
-                      transactions:BPTransaction,
-                      generators:BPTransactionGenerator,
-                      ledgers:BPLedger]
+                      transactions:BPBudgetItem,
+                      generators:BPBudgetItemGenerator]
 
     static constraints = {
         name nullable: false, empty: false
         description nullable: false, empty: false
         startDate nullable: false
-        endDate nullable: false, validator: {val, obj -> val.after(obj.startDate)}
+        endDate nullable: false, validator: {val, obj ->
+            if (obj.startDate) {
+                val.after(obj.startDate)
+            } else {false}
+        }
         user nullable: false
         accounts nullable: true, empty: true
         transactions nullable: true, empty: true
         generators nullable: true, empty: true
-        ledgers nullable: true, empty: true
+        ledger nullable: true
     }
 
 }

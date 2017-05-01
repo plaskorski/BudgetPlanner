@@ -5,14 +5,14 @@ import grails.transaction.Transactional
 @Transactional
 class BPLedgerService {
 
-    def generateTransactions(BPTransactionGenerator generator) {
-        BPTransaction[] transactions = []
+    def generateTransactions(BPBudgetItemGenerator generator) {
+        BPBudgetItem[] transactions = []
         // TODO: implement this
         transactions
     }
 
-    def generateRow(BPLedgerRow row, BPTransaction transaction) {
-        BPLedgerRow newRow = new BPLedgerRow(
+    def generateRow(BPTableRow row, BPBudgetItem transaction) {
+        BPTableRow newRow = new BPTableRow(
                 date:transaction.date,
                 name:transaction.name,
                 amount:transaction.amount,
@@ -32,22 +32,22 @@ class BPLedgerService {
     def createLedger(BPScenario scenario) {
 
         // Create ledger
-        BPLedger ledger = new BPLedger(scenario:scenario)
+        BPTable ledger = new BPTable(scenario:scenario)
         def hdr = []
         hdr<<"Date"<<"Name"<<"Tags"<<"Amount"
         scenario.accounts.sort { a,b -> a.name <=> b.name }.each { val -> hdr<<val }
         ledger.header = hdr
 
         // Generate and sort transactions
-        BPTransaction[] transactions = []
+        BPBudgetItem[] transactions = []
         scenario.transactions.each { val -> transactions<<val }
         scenario.generators.each { val -> transactions<<generateTransactions(val) }
         transactions = transactions.sort {a,b -> a.date <=> b.date}
 
         // Loop over transactions and generate rows
-        BPLedgerRow[] rows = []
-        BPLedgerRow row
-        BPLedgerRow prevRow = new BPLedgerRow(
+        BPTableRow[] rows = []
+        BPTableRow row
+        BPTableRow prevRow = new BPTableRow(
                 date:scenario.startDate,
                 name:"ScenarioStart",
                 amount: 0,
@@ -56,7 +56,7 @@ class BPLedgerService {
                 entries: []
         )
         scenario.accounts.each { val ->
-            BPLedgerRowEntry entry = new BPLedgerRowEntry(name: val.name, balance: val.balance)
+            BPTableRowBalance entry = new BPTableRowBalance(name: val.name, balance: val.balance)
             prevRow.entries << entry
         }
         rows<<prevRow

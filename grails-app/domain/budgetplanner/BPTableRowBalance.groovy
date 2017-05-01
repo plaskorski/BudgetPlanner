@@ -1,11 +1,11 @@
 package budgetplanner
 
-class BPLedgerRowEntry {
+class BPTableRowBalance {
 
     String name
     Integer balance
 
-    static belongsTo = [ledgerRow:BPLedgerRow]
+    static belongsTo = [tableRow:BPTableRow]
 
     static constraints = {
         name nullable: false, empty:false

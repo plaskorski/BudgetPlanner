@@ -5,7 +5,7 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
-class BPUser implements Serializable {
+class User implements Serializable {
 
 	private static final long serialVersionUID = 1
 
@@ -21,8 +21,8 @@ class BPUser implements Serializable {
 	boolean accountLocked
 	boolean passwordExpired
 
-	Set<BPRole> getAuthorities() {
-		BPUserRole.findAllByBPUser2(this)*.BPRole
+	Set<Role> getAuthorities() {
+		UserRole.findAllByUser(this)*.role
 	}
 
 	def beforeInsert() {
@@ -39,9 +39,9 @@ class BPUser implements Serializable {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
 	}
 
-	static hasMany = [scenarios:BPScenario]
-
 	static transients = ['springSecurityService']
+
+	static hasMany = [scenarios:BPScenario]
 
 	static constraints = {
 		password blank: false, password: true
