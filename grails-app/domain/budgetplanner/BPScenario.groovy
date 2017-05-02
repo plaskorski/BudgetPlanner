@@ -7,9 +7,44 @@ class BPScenario {
     Date startDate
     Date endDate
 
+    void populateTable() {
+
+        // Create table
+        table = new BPTable(scenario:this)
+
+        // Generate and sort transactions
+        BPBudgetItem[] allTransactions = []
+        transactions.each { allTransactions += it }
+        generators.each { allTransactions += it.getBudgetItems() }
+        allTransactions = allTransactions.sort {a,b -> a.date <=> b.date ?: a.name <=> b.name}
+
+        // Loop over transactions and generate rows
+        BPTableRow[] rows = []
+        BPTableRow row
+        BPTableRow prevRow = new BPTableRow(
+                date:startDate,
+                name:"ScenarioStart",
+                amount: 0,
+                tags:[],
+                table:table,
+                entries: []
+        )
+        accounts.each {
+            BPTableRowBalance entry = new BPTableRowBalance(name: it.name, balance: it.balance)
+            prevRow.entries << entry
+        }
+        rows += prevRow
+        allTransactions.each {
+            row = prevRow.getNextRow(it)
+            rows += row
+            prevRow = row
+        }
+        table.rows = rows
+    }
+
     static belongsTo = [user:User]
 
-    static hasOne = [ledger:BPTable]
+    static hasOne = [table:BPTable]
 
     static hasMany = [accounts:BPAccount,
                       transactions:BPBudgetItem,
@@ -28,7 +63,7 @@ class BPScenario {
         accounts nullable: true, empty: true
         transactions nullable: true, empty: true
         generators nullable: true, empty: true
-        ledger nullable: true
+        table nullable: true
     }
 
 }

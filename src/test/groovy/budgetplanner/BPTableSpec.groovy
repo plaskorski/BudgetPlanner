@@ -41,7 +41,7 @@ class BPTableSpec extends Specification {
         BPTable table = new BPTable()
         table.scenario=scenario
         expect:
-        table.header == ["Date","Name","Tags","Amount","Checking"]
+        table.header == ["Date","Name","Amount","Checking"]
     }
 
     void "test 2 header values"() {
@@ -56,7 +56,7 @@ class BPTableSpec extends Specification {
         BPTable table = new BPTable()
         table.scenario=scenario
         expect:
-        table.header == ["Date","Name","Tags","Amount","Checking","Savings"]
+        table.header == ["Date","Name","Amount","Checking","Savings"]
     }
     void "test 2 header values out of order"() {
         HashSet<BPAccount> accounts = new HashSet<>()
@@ -70,6 +70,6 @@ class BPTableSpec extends Specification {
         BPTable table = new BPTable()
         table.scenario=scenario
         expect:
-        table.header == ["Date","Name","Tags","Amount","Checking","Savings"]
+        table.header == ["Date","Name","Amount","Checking","Savings"]
     }
 }

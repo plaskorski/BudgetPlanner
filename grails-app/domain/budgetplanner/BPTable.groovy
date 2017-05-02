@@ -4,7 +4,7 @@ class BPTable {
 
     def getHeader() {
         def hdr = []
-        hdr<<"Date"<<"Name"<<"Tags"<<"Amount"
+        hdr<<"Date"<<"Name"<<"Amount"
         scenario.accounts.sort{ it.name }.each { hdr << it.name }
         hdr
     }

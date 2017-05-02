@@ -8,13 +8,56 @@ class BPBudgetItemGenerator {
     Integer intervalValue
     budgetplanner.IntervalType intervalType
     Integer amount
+    BPAccount fromAccount
+    BPAccount toAccount
+
+    static transients = ["budgetItems"]
 
     static belongsTo = [scenario:BPScenario]
 
-    static hasOne = [fromAccount:BPAccount,
-                     toAccount:BPAccount]
+    BPBudgetItem[] getBudgetItems() {
 
-    static hasMany = [tags:String]
+        def items = []
+
+        BPBudgetItem item
+        Date date = startDate
+
+        while (true) {
+
+            if (date.after(endDate)) {break}
+
+            item = new BPBudgetItem(
+                    name: name,
+                    date: date,
+                    amount: amount,
+                    scenario: scenario,
+                    fromAccount: fromAccount,
+                    toAccount: toAccount
+            )
+            items << item
+
+            Calendar cal = Calendar.getInstance()
+            cal.setTime(date)
+            def intType = Calendar.DATE
+            def intValue = intervalValue
+            switch (intervalType) {
+                case budgetplanner.IntervalType.DAY:
+                    break
+                case budgetplanner.IntervalType.WEEK:
+                    intValue *= 7
+                    break
+                case budgetplanner.IntervalType.MONTH:
+                    intType = Calendar.MONTH
+                    break
+                case budgetplanner.IntervalType.YEAR:
+                    intType = Calendar.YEAR
+                    break
+            }
+            cal.add(intType, intValue)
+            date = cal.getTime()
+        }
+        items
+    }
 
     static constraints = {
         scenario nullable: false
@@ -42,7 +85,6 @@ class BPBudgetItemGenerator {
             } else {false}
         }
         amount nullable: false, validator: {val, obj -> val >= 0}
-        tags nullable: true, empty: true
         fromAccount nullable: true, validator: {val, obj ->
             (val==null && obj.toAccount!=null) |
                     (val!=null && obj.toAccount==null) |
