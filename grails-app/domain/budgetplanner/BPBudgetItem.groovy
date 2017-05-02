@@ -8,7 +8,7 @@ class BPBudgetItem {
     BPAccount fromAccount
     BPAccount toAccount
 
-    static belongsTo = [scenario:BPScenario]
+    static belongsTo = [scenario:BPScenario,user:User]
 
     static constraints = {
         name nullable: false, emtpy: false
@@ -20,6 +20,7 @@ class BPBudgetItem {
         }
         amount nullable: false, min:0
         scenario nullable: false
+        user nullable: false
         toAccount nullable: true
         fromAccount nullable: true, validator: {val, obj ->
                     (val==null && obj.toAccount!=null) |

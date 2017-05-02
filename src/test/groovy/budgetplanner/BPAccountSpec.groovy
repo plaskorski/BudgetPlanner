@@ -17,37 +17,37 @@ class BPAccountSpec extends Specification {
     }
 
     void "valid parameters validates"() {
-        a = new BPAccount(name: "Paul's Checking", type: budgetplanner.AccountType.CHECKING, balance: 20000, scenario: s)
+        a = new BPAccount(name: "Paul's Checking", user: new User(), type: budgetplanner.AccountType.CHECKING, balance: 20000, scenario: s)
         expect:
             a.validate()
     }
 
     void "no scenario does not validate"() {
-        a = new BPAccount(name: "Paul's Checking", type: budgetplanner.AccountType.CHECKING, balance: 20000)
+        a = new BPAccount(name: "Paul's Checking", user: new User(), type: budgetplanner.AccountType.CHECKING, balance: 20000)
         expect:
            ! a.validate()
     }
 
     void "no name does not validate"() {
-        a = new BPAccount(type: budgetplanner.AccountType.CHECKING, balance: 20000, scenario: s)
+        a = new BPAccount(type: budgetplanner.AccountType.CHECKING, user: new User(), balance: 20000, scenario: s)
         expect:
             ! a.validate()
     }
 
     void "no balance does not validate"() {
-        a = new BPAccount(name: "Paul's Checking", type: budgetplanner.AccountType.CHECKING, scenario: s)
+        a = new BPAccount(name: "Paul's Checking", user: new User(), type: budgetplanner.AccountType.CHECKING, scenario: s)
         expect:
         ! a.validate()
     }
 
     void "no type does not validate"() {
-        a = new BPAccount(name: "Paul's Checking", balance: 20000, scenario: s)
+        a = new BPAccount(name: "Paul's Checking", user: new User(), balance: 20000, scenario: s)
         expect:
             ! a.validate()
     }
 
     void "empty name does not validate"() {
-        a = new BPAccount(name: "", type: budgetplanner.AccountType.CHECKING, balance: 20000, scenario: s)
+        a = new BPAccount(name: "", user: new User(), type: budgetplanner.AccountType.CHECKING, balance: 20000, scenario: s)
         expect:
         ! a.validate()
     }

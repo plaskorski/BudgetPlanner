@@ -41,7 +41,11 @@ class User implements Serializable {
 
 	static transients = ['springSecurityService']
 
-	static hasMany = [scenarios:BPScenario]
+	static hasMany = [scenarios:BPScenario,
+                      accounts:BPAccount,
+                      budgetItems:BPBudgetItem,
+                      budgetItemGenerators:BPBudgetItemGenerator,
+                      tables:BPTable]
 
 	static constraints = {
 		password blank: false, password: true
@@ -49,6 +53,10 @@ class User implements Serializable {
 		name nullable: false, empty: false
 		birthDate nullable: false
 		scenarios nullable: true, empty: true
+		accounts nullable: true, empty: true
+		budgetItems nullable: true, empty: true
+        budgetItemGenerators nullable: true, empty: true
+        tables nullable: true, empty: true
 	}
 
 	static mapping = {

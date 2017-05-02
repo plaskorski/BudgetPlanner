@@ -9,19 +9,35 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class BPBudgetItemController {
 
+    def springSecurityService
+
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond BPBudgetItem.list(params), model:[BPBudgetItemCount: BPBudgetItem.count()]
+    def index() {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            def budgetItems = User.findById(userId).budgetItems
+            respond budgetItems.toList(), model: [BPBudgetItemCount: budgetItems.size()]
+        } else {
+            respond BPBudgetItem.list(), model: [BPBudgetItemCount: BPBudgetItem.count()]
+        }
     }
 
     def show(BPBudgetItem BPBudgetItem) {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPBudgetItem.userId != userId) {notFound()}
+        }
         respond BPBudgetItem
     }
 
     def create() {
-        respond new BPBudgetItem(params)
+        BPBudgetItem newBudgetItem = new BPBudgetItem(params)
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (newBudgetItem.userId != userId) {notFound()}
+        }
+        respond newBudgetItem
     }
 
     @Transactional
@@ -38,6 +54,11 @@ class BPBudgetItemController {
             return
         }
 
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPBudgetItem.userId != userId) {notFound()}
+        }
+
         BPBudgetItem.save flush:true
 
         request.withFormat {
@@ -50,6 +71,10 @@ class BPBudgetItemController {
     }
 
     def edit(BPBudgetItem BPBudgetItem) {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPBudgetItem.userId != userId) {notFound()}
+        }
         respond BPBudgetItem
     }
 
@@ -65,6 +90,11 @@ class BPBudgetItemController {
             transactionStatus.setRollbackOnly()
             respond BPBudgetItem.errors, view:'edit'
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPBudgetItem.userId != userId) {notFound()}
         }
 
         BPBudgetItem.save flush:true
@@ -85,6 +115,11 @@ class BPBudgetItemController {
             transactionStatus.setRollbackOnly()
             notFound()
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPBudgetItem.userId != userId) {notFound()}
         }
 
         BPBudgetItem.delete flush:true

@@ -13,7 +13,7 @@ class BPBudgetItemGenerator {
 
     static transients = ["budgetItems"]
 
-    static belongsTo = [scenario:BPScenario]
+    static belongsTo = [scenario:BPScenario,user:User]
 
     BPBudgetItem[] getBudgetItems() {
 
@@ -61,6 +61,7 @@ class BPBudgetItemGenerator {
 
     static constraints = {
         scenario nullable: false
+        user nullable: false
         name nullable: false, empty: false
         startDate nullable: false, validator: {val, obj ->
             if (val) {

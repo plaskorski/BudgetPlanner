@@ -9,19 +9,37 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class BPAccountController {
 
+    def springSecurityService
+
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond BPAccount.list(params), model:[BPAccountCount: BPAccount.count()]
+    def index() {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            def accounts = User.findById(userId).accounts
+            respond accounts.toList(), model: [BPAccountCount: accounts.size()]
+        } else {
+            respond BPAccount.list(), model: [BPAccountCount: BPAccount.count()]
+        }
     }
 
     def show(BPAccount BPAccount) {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPAccount.userId!=userId) {notFound()}
+        }
         respond BPAccount
     }
 
     def create() {
-        respond new BPAccount(params)
+        if (springSecurityService) {
+            BPAccount newAccount = new BPAccount(params)
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (newAccount.userId != userId) {notFound()}
+            respond newAccount
+        } else {
+            respond new BPAccount(params)
+        }
     }
 
     @Transactional
@@ -36,6 +54,11 @@ class BPAccountController {
             transactionStatus.setRollbackOnly()
             respond BPAccount.errors, view:'create'
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPAccount.userId!=userId) {notFound()}
         }
 
         BPAccount.save flush:true
@@ -67,6 +90,11 @@ class BPAccountController {
             return
         }
 
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPAccount.userId!=userId) {notFound()}
+        }
+
         BPAccount.save flush:true
 
         request.withFormat {
@@ -85,6 +113,11 @@ class BPAccountController {
             transactionStatus.setRollbackOnly()
             notFound()
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPAccount.userId!=userId) {notFound()}
         }
 
         BPAccount.delete flush:true

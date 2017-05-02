@@ -9,27 +9,53 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class BPScenarioController {
 
+    def springSecurityService
+
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond BPScenario.list(params), model:[BPScenarioCount: BPScenario.count()]
+    def index() {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            def scenarios = User.findById(userId).scenarios
+            respond scenarios.toList(), model: [BPScenarioCount: scenarios.size()]
+        } else {
+            respond BPScenario.list(), model: [BPScenarioCount: BPScenario.count()]
+        }
     }
 
     def show(BPScenario BPScenario) {
-        respond BPScenario
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPScenario.user.id != userId) {notFound()}
+            respond BPScenario
+        } else {
+            respond BPScenario
+        }
     }
 
     def create() {
-        respond new BPScenario(params)
+        if (springSecurityService) {
+            BPScenario newScenario = new BPScenario(params)
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (newScenario.user.id != userId) {notFound()}
+            respond newScenario
+        } else {
+            respond new BPScenario(params)
+        }
     }
 
     @Transactional
     def save(BPScenario BPScenario) {
+
         if (BPScenario == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPScenario.user.id != userId) {notFound()}
         }
 
         if (BPScenario.hasErrors()) {
@@ -50,15 +76,25 @@ class BPScenarioController {
     }
 
     def edit(BPScenario BPScenario) {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPScenario.user.id != userId) {notFound()}
+        }
         respond BPScenario
     }
 
     @Transactional
     def update(BPScenario BPScenario) {
+
         if (BPScenario == null) {
             transactionStatus.setRollbackOnly()
             notFound()
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPScenario.user.id != userId) {notFound()}
         }
 
         if (BPScenario.hasErrors()) {
@@ -85,6 +121,11 @@ class BPScenarioController {
             transactionStatus.setRollbackOnly()
             notFound()
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPScenario.user.id != userId) {notFound()}
         }
 
         BPScenario.delete flush:true

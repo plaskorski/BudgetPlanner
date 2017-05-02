@@ -9,19 +9,35 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class BPTableController {
 
+    def springSecurityService
+
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond BPTable.list(params), model:[BPTableCount: BPTable.count()]
+    def index() {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            def tables = User.findById(userId).tables
+            respond tables.toList(), model: [BPTable: tables.size()]
+        } else {
+            respond BPTable.list(), model: [BPTableCount: BPTable.count()]
+        }
     }
 
     def show(BPTable BPTable) {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPTable.userId != userId) {notFound()}
+        }
         respond BPTable
     }
 
     def create() {
-        respond new BPTable(params)
+        BPTable table = new BPTable(params)
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (table.userId != userId) {notFound()}
+        }
+        respond table
     }
 
     @Transactional
@@ -38,6 +54,11 @@ class BPTableController {
             return
         }
 
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPTable.userId != userId) {notFound()}
+        }
+
         BPTable.save flush:true
 
         request.withFormat {
@@ -50,6 +71,10 @@ class BPTableController {
     }
 
     def edit(BPTable BPTable) {
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPTable.userId != userId) {notFound()}
+        }
         respond BPTable
     }
 
@@ -65,6 +90,11 @@ class BPTableController {
             transactionStatus.setRollbackOnly()
             respond BPTable.errors, view:'edit'
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPTable.userId != userId) {notFound()}
         }
 
         BPTable.save flush:true
@@ -85,6 +115,11 @@ class BPTableController {
             transactionStatus.setRollbackOnly()
             notFound()
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (BPTable.userId != userId) {notFound()}
         }
 
         BPTable.delete flush:true

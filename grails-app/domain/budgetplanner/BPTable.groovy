@@ -11,12 +11,13 @@ class BPTable {
 
     static transients = ['header']
 
-    static belongsTo = [scenario:BPScenario]
+    static belongsTo = [scenario:BPScenario,user:User]
 
     static hasMany = [rows:BPTableRow]
 
     static constraints = {
         rows nullable: true, empty: true
         scenario nullable: false
+        user nullable: false
     }
 }

@@ -13,6 +13,7 @@ class BPAccountControllerSpec extends Specification {
         params["type"] = budgetplanner.AccountType.CHECKING
         params["balance"] = 10000
         params["scenario"] = new BPScenario()
+        params["user"] = new User()
     }
 
     void "Test the index action returns the correct model"() {
