@@ -15,19 +15,20 @@ class BPTableSpec extends Specification {
         when:
         BPTable table = new BPTable(
                 scenario: scenario,
-                rows: rows
+                rows: rows,
+                user:user
         )
         then:
         def output = table.validate()
         output == result
 
         where:
-        scenario|rows|result
-        new BPScenario()|[]|true
-        new BPScenario()|null|true
-        null|null|false
-        null|[]|false
-        new BPScenario()|new HashSet<BPTableRow>().add(new BPTableRow())|true
+        user|scenario|rows|result
+        new User()|new BPScenario()|[]|true
+        new User()|new BPScenario()|null|true
+        new User()|null|null|false
+        new User()|null|[]|false
+        new User()|new BPScenario()|new HashSet<BPTableRow>().add(new BPTableRow())|true
     }
 
     void "test header values"() {

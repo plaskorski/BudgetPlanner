@@ -16,8 +16,23 @@ class BPAccountController {
     def index() {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            def accounts = User.findById(userId).accounts
-            respond accounts.toList(), model: [BPAccountCount: accounts.size()]
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPAccount.list(), model: [BPAccountCount: BPAccount.count()]
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority }) {
+                        def accounts = user.accounts
+                        respond accounts.toList(), model: [BPAccountCount: accounts.size()]
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond BPAccount.list(), model: [BPAccountCount: BPAccount.count()]
         }
@@ -26,17 +41,51 @@ class BPAccountController {
     def show(BPAccount BPAccount) {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPAccount.userId!=userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPAccount
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPAccount.userId == userId)) {
+                        respond BPAccount
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        } else {
+            respond BPAccount
         }
-        respond BPAccount
     }
 
     def create() {
         if (springSecurityService) {
             BPAccount newAccount = new BPAccount(params)
-            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (newAccount.userId != userId) {notFound()}
-            respond newAccount
+            if (newAccount) {
+                def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+                if (userId) {
+                    def user = User.findById(userId)
+                    if (user) {
+                        if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                            respond newAccount
+                        } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (newAccount.userId == userId)) {
+                            respond newAccount
+                        } else {
+                            notFound()
+                        }
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond new BPAccount(params)
         }
@@ -58,7 +107,18 @@ class BPAccountController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPAccount.userId!=userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPAccount.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPAccount.save flush:true
@@ -73,6 +133,23 @@ class BPAccountController {
     }
 
     def edit(BPAccount BPAccount) {
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPAccount.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        }
+
         respond BPAccount
     }
 
@@ -92,7 +169,18 @@ class BPAccountController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPAccount.userId!=userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPAccount.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPAccount.save flush:true
@@ -117,7 +205,18 @@ class BPAccountController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPAccount.userId!=userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPAccount.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPAccount.delete flush:true

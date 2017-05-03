@@ -2,11 +2,18 @@ package budgetplanner
 
 class BPBudgetItemGenerator {
 
+    enum IntervalType {
+        DAY,
+        WEEK,
+        MONTH,
+        YEAR
+    }
+
     String name
     Date startDate
     Date endDate
     Integer intervalValue
-    budgetplanner.IntervalType intervalType
+    IntervalType intervalType
     Integer amount
     BPAccount fromAccount
     BPAccount toAccount
@@ -32,7 +39,8 @@ class BPBudgetItemGenerator {
                     amount: amount,
                     scenario: scenario,
                     fromAccount: fromAccount,
-                    toAccount: toAccount
+                    toAccount: toAccount,
+                    user: user
             )
             items << item
 
@@ -41,15 +49,15 @@ class BPBudgetItemGenerator {
             def intType = Calendar.DATE
             def intValue = intervalValue
             switch (intervalType) {
-                case budgetplanner.IntervalType.DAY:
+                case IntervalType.DAY:
                     break
-                case budgetplanner.IntervalType.WEEK:
+                case IntervalType.WEEK:
                     intValue *= 7
                     break
-                case budgetplanner.IntervalType.MONTH:
+                case IntervalType.MONTH:
                     intType = Calendar.MONTH
                     break
-                case budgetplanner.IntervalType.YEAR:
+                case IntervalType.YEAR:
                     intType = Calendar.YEAR
                     break
             }

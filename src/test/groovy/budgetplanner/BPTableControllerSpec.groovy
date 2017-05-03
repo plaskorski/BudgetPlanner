@@ -10,6 +10,7 @@ class BPTableControllerSpec extends Specification {
     def populateValidParams(params) {
         assert params != null
         params["scenario"] = new BPScenario()
+        params["user"] = new User()
     }
 
     void "Test the index action returns the correct model"() {

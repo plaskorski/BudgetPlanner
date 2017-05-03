@@ -16,8 +16,23 @@ class BPTableController {
     def index() {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            def tables = User.findById(userId).tables
-            respond tables.toList(), model: [BPTable: tables.size()]
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPTable.list(), model: [BPTableCount: BPTable.count()]
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority }) {
+                        def items = user.tables
+                        respond items.toList(), model: [BPTableCount: items.size()]
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond BPTable.list(), model: [BPTableCount: BPTable.count()]
         }
@@ -26,18 +41,54 @@ class BPTableController {
     def show(BPTable BPTable) {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPTable.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPTable
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPTable.userId == userId)) {
+                        respond BPTable
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        } else {
+            respond BPTable
         }
-        respond BPTable
     }
 
     def create() {
-        BPTable table = new BPTable(params)
         if (springSecurityService) {
-            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (table.userId != userId) {notFound()}
+            BPTable newItem = new BPTable(params)
+            if (newItem) {
+                def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+                if (userId) {
+                    def user = User.findById(userId)
+                    if (user) {
+                        if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                            respond newItem
+                        } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (newItem.userId == userId)) {
+                            respond newItem
+                        } else {
+                            notFound()
+                        }
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        } else {
+            respond new BPTable(params)
         }
-        respond table
     }
 
     @Transactional
@@ -56,7 +107,18 @@ class BPTableController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPTable.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPTable.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPTable.save flush:true
@@ -73,7 +135,18 @@ class BPTableController {
     def edit(BPTable BPTable) {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPTable.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPTable.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
         respond BPTable
     }
@@ -94,7 +167,18 @@ class BPTableController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPTable.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPTable.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPTable.save flush:true
@@ -119,7 +203,18 @@ class BPTableController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPTable.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPTable.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPTable.delete flush:true

@@ -16,8 +16,23 @@ class BPBudgetItemController {
     def index() {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            def budgetItems = User.findById(userId).budgetItems
-            respond budgetItems.toList(), model: [BPBudgetItemCount: budgetItems.size()]
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPBudgetItem.list(), model: [BPBudgetItemCount: BPBudgetItem.count()]
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority }) {
+                        def items = user.budgetItems
+                        respond items.toList(), model: [BPBudgetItemCount: items.size()]
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond BPBudgetItem.list(), model: [BPBudgetItemCount: BPBudgetItem.count()]
         }
@@ -26,18 +41,54 @@ class BPBudgetItemController {
     def show(BPBudgetItem BPBudgetItem) {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPBudgetItem.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPBudgetItem
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItem.userId == userId)) {
+                        respond BPBudgetItem
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        } else {
+            respond BPBudgetItem
         }
-        respond BPBudgetItem
     }
 
     def create() {
-        BPBudgetItem newBudgetItem = new BPBudgetItem(params)
         if (springSecurityService) {
-            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (newBudgetItem.userId != userId) {notFound()}
+            BPBudgetItem newItem = new BPBudgetItem(params)
+            if (newItem) {
+                def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+                if (userId) {
+                    def user = User.findById(userId)
+                    if (user) {
+                        if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                            respond newItem
+                        } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (newItem.userId == userId)) {
+                            respond newItem
+                        } else {
+                            notFound()
+                        }
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        } else {
+            respond new BPBudgetItem(params)
         }
-        respond newBudgetItem
     }
 
     @Transactional
@@ -56,7 +107,18 @@ class BPBudgetItemController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPBudgetItem.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItem.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPBudgetItem.save flush:true
@@ -73,7 +135,18 @@ class BPBudgetItemController {
     def edit(BPBudgetItem BPBudgetItem) {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPBudgetItem.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItem.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
         respond BPBudgetItem
     }
@@ -94,7 +167,18 @@ class BPBudgetItemController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPBudgetItem.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItem.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPBudgetItem.save flush:true
@@ -119,7 +203,18 @@ class BPBudgetItemController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPBudgetItem.userId != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItem.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPBudgetItem.delete flush:true

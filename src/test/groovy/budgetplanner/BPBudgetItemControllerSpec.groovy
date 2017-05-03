@@ -18,6 +18,7 @@ class BPBudgetItemControllerSpec extends Specification {
                 startDate: new Date(year:2017,month: 1,date: 1),
                 endDate: new Date(year: 2017,month: 12,date: 31)
         )
+        params["user"] = new User()
     }
 
     void "Test the index action returns the correct model"() {

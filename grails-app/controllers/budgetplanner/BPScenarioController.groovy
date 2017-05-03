@@ -16,18 +16,48 @@ class BPScenarioController {
     def index() {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            def scenarios = User.findById(userId).scenarios
-            respond scenarios.toList(), model: [BPScenarioCount: scenarios.size()]
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPScenario.list(), model: [BPScenarioCount: BPScenario.count()]
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority }) {
+                        def items = user.scenarios
+                        respond items.toList(), model: [BPScenarioCount: items.size()]
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond BPScenario.list(), model: [BPScenarioCount: BPScenario.count()]
         }
     }
 
     def show(BPScenario BPScenario) {
+        BPScenario?.populateTable()
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPScenario.user.id != userId) {notFound()}
-            respond BPScenario
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPScenario
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId == userId)) {
+                        respond BPScenario
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond BPScenario
         }
@@ -35,10 +65,28 @@ class BPScenarioController {
 
     def create() {
         if (springSecurityService) {
-            BPScenario newScenario = new BPScenario(params)
-            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (newScenario.user.id != userId) {notFound()}
-            respond newScenario
+            BPScenario newItem = new BPScenario(params)
+            if (newItem) {
+                def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+                if (userId) {
+                    def user = User.findById(userId)
+                    if (user) {
+                        if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                            respond newItem
+                        } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (newItem.userId == userId)) {
+                            respond newItem
+                        } else {
+                            notFound()
+                        }
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         } else {
             respond new BPScenario(params)
         }
@@ -53,15 +101,26 @@ class BPScenarioController {
             return
         }
 
-        if (springSecurityService) {
-            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPScenario.user.id != userId) {notFound()}
-        }
-
         if (BPScenario.hasErrors()) {
             transactionStatus.setRollbackOnly()
             respond BPScenario.errors, view:'create'
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPScenario.save flush:true
@@ -78,8 +137,20 @@ class BPScenarioController {
     def edit(BPScenario BPScenario) {
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPScenario.user.id != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
+
         respond BPScenario
     }
 
@@ -92,15 +163,26 @@ class BPScenarioController {
             return
         }
 
-        if (springSecurityService) {
-            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPScenario.user.id != userId) {notFound()}
-        }
-
         if (BPScenario.hasErrors()) {
             transactionStatus.setRollbackOnly()
             respond BPScenario.errors, view:'edit'
             return
+        }
+
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPScenario.save flush:true
@@ -125,7 +207,18 @@ class BPScenarioController {
 
         if (springSecurityService) {
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
-            if (BPScenario.user.id != userId) {notFound()}
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId != userId)) {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
         }
 
         BPScenario.delete flush:true

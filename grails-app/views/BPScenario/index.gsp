@@ -2,26 +2,59 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'BPScenario.label', default: 'BPScenario')}" />
-        <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <title>Scenarios</title>
     </head>
     <body>
-        <a href="#list-BPScenario" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-        <div id="list-BPScenario" class="content scaffold-list" role="main">
-            <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-                <div class="message" role="status">${flash.message}</div>
-            </g:if>
-            <f:table collection="${BPScenarioList}" />
-
-            <div class="pagination">
-                <g:paginate total="${BPScenarioCount ?: 0}" />
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Scenarios</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="btn-group" role="group" aria-label="buttons">
+                        <button type="button" class="btn btn-primary">Create</button>
+                        <button type="button" class="btn btn-default" disabled="disabled">Delete</button>
+                        <button type="button" class="btn btn-default" disabled="disabled">Compare</button>
+                    </div>
+                    <table class="table table-hover table-responsive">
+                        <theader>
+                            <tr>
+                                <sec:ifAnyGranted roles="ROLE_ADMIN"><th>User</th></sec:ifAnyGranted>
+                                <sec:ifNotGranted roles="ROLE_ADMIN"><th>Name</th></sec:ifNotGranted>
+                                <sec:ifAnyGranted roles="ROLE_ADMIN"><th>Scenario</th></sec:ifAnyGranted>
+                                <th>Description</th>
+                                <th>StartDate</th>
+                                <th>EndDate</th>
+                                <th class="hidden-xs">Accounts</th>
+                                <th class="hidden-xs">Single Transactions</th>
+                                <th class="hidden-xs">Repeat Transactions</th>
+                            </tr>
+                        </theader>
+                        <tbody>
+                        <g:each in="${BPScenarioList}" var="scenario">
+                            <tr>
+                                <sec:ifAnyGranted roles="ROLE_ADMIN">
+                                    <th scope="row">
+                                        <g:link controller="user" action="show" id="${scenario.userId}">${scenario.user.name}</g:link>
+                                    </th>
+                                    <th>
+                                        <g:link controller="BPScenario" action="show" id="${scenario.id}">${scenario.name}</g:link>
+                                    </th>
+                                </sec:ifAnyGranted>
+                                <sec:ifNotGranted roles="ROLE_ADMIN">
+                                    <th scope="row"><g:link action="show" id="${scenario.id}">${scenario.name}</g:link></th>
+                                </sec:ifNotGranted>
+                                <td>${scenario.description}</td>
+                                <td>${scenario.startDate.format("M/dd/yy")}</td>
+                                <td>${scenario.endDate.format("M/dd/yy")}</td>
+                                <td class="hidden-xs">${scenario.accounts.size()}</td>
+                                <td class="hidden-xs">${scenario.transactions.size()}</td>
+                                <td class="hidden-xs">${scenario.generators.size()}</td>
+                            </tr>
+                        </g:each>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </body>
