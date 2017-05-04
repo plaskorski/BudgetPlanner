@@ -10,7 +10,7 @@ class BPAccountControllerSpec extends Specification {
     def populateValidParams(params) {
         assert params != null
         params["name"] = "SomeName"
-        params["type"] = budgetplanner.AccountType.CHECKING
+        params["type"] = BPAccount.AccountType.CHECKING
         params["balance"] = 10000
         params["scenario"] = new BPScenario()
         params["user"] = new User()

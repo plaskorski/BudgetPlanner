@@ -126,9 +126,9 @@ class BPAccountController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'BPAccount.label', default: 'BPAccount'), BPAccount.id])
-                redirect BPAccount
+                redirect(controller: "BPScenario", action: "show", id: BPAccount.scenarioId, method:"GET")
             }
-            '*' { respond BPAccount, [status: CREATED] }
+            '*' { redirect(controller: "BPScenario", action: "show", id: BPAccount.scenarioId, method:"GET") }
         }
     }
 
@@ -188,9 +188,9 @@ class BPAccountController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'BPAccount.label', default: 'BPAccount'), BPAccount.id])
-                redirect BPAccount
+                redirect controller:"BPScenario",action:"show",id:BPAccount.scenario.id, method:"GET"
             }
-            '*'{ respond BPAccount, [status: OK] }
+            '*'{ redirect controller:"BPScenario",action:"show",id:BPAccount.scenario.id, method:"GET" }
         }
     }
 
@@ -218,15 +218,19 @@ class BPAccountController {
                 notFound()
             }
         }
+        def scenario = BPAccount.scenario
+
+        BPAccount.scenario.accounts.remove(BPAccount)
+        BPAccount.scenario.save flush:true
 
         BPAccount.delete flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'BPAccount.label', default: 'BPAccount'), BPAccount.id])
-                redirect action:"index", method:"GET"
+                redirect controller:"BPScenario", action:"show", id:scenario.id, method:"GET"
             }
-            '*'{ render status: NO_CONTENT }
+            '*'{ redirect controller:"BPScenario", action:"show", id:scenario.id, method:"GET" }
         }
     }
 

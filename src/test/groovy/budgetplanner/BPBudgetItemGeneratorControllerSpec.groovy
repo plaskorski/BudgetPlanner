@@ -12,7 +12,7 @@ class BPBudgetItemGeneratorControllerSpec extends Specification {
         params["name"] = "TestItem"
         params["startDate"] = new Date(year: 2017,month: 6,date: 1)
         params["endDate"] = new Date(year: 2017,month: 12,date: 31)
-        params["intervalType"] = budgetplanner.IntervalType.MONTH
+        params["intervalType"] = BPBudgetItemGenerator.IntervalType.MONTH
         params["intervalValue"] = 1
         params["amount"] = 10000
         params["fromAccount"] = new BPAccount(name: "1")

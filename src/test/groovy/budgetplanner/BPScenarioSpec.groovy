@@ -48,23 +48,33 @@ class BPScenarioSpec extends Specification {
     }
 
     void "test one transaction"() {
+        User user = new User()
         BPScenario scenario = new BPScenario(
                 startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31))
-        BPAccount account = new BPAccount(name:"Checking",balance: 50000)
+                endDate: new Date(year: 2017,month: 12,date: 31),
+                user: user,
+                name:"test",
+                description: "test")
+        BPAccount account = new BPAccount(
+                name:"Checking",
+                balance: 50000,
+                scenario: scenario,
+                user:user)
         scenario.accounts = []
         scenario.accounts << account
-        account.scenario = scenario
         scenario.transactions = []
         BPBudgetItem item = new BPBudgetItem(
                 name: "Cell Phone",
                 date: new Date(year: 2017,month: 6,date: 1),
                 amount: 5000,
-                fromAccount:account)
+                fromAccount:account,
+                user:user,
+                scenario: scenario)
         scenario.transactions << item
         scenario.populateTable()
         scenario.generators = []
         expect:
+        scenario.validate()
         scenario.table.rows.size() == 2
         scenario.table.rows[0].entries[0].balance == 50000
         scenario.table.rows[1].entries[0].balance == 45000
@@ -72,26 +82,36 @@ class BPScenarioSpec extends Specification {
     }
 
     void "test transaction generator"() {
+        User user = new User()
         BPScenario scenario = new BPScenario(
                 startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31))
-        BPAccount account = new BPAccount(name:"Checking",balance: 50000)
+                endDate: new Date(year: 2017,month: 12,date: 31),
+                user:user,
+                name:"test",
+                description: "test")
+        BPAccount account = new BPAccount(
+                name:"Checking",
+                balance: 50000,
+                scenario: scenario,
+                user:user)
         scenario.accounts = []
         scenario.accounts << account
-        account.scenario = scenario
         scenario.generators = []
         BPBudgetItemGenerator generator = new BPBudgetItemGenerator(
                 name: "Cell Phone",
                 startDate: new Date(year: 2017,month: 6,date: 1),
                 endDate: new Date(year: 2017,month: 12,date: 31),
                 intervalValue: 1,
-                intervalType: budgetplanner.IntervalType.MONTH,
+                intervalType: BPBudgetItemGenerator.IntervalType.MONTH,
                 amount: 5000,
-                fromAccount:account)
+                fromAccount:account,
+                scenario:scenario,
+                user:user)
         scenario.generators << generator
         scenario.populateTable()
         scenario.transactions = []
         expect:
+        scenario.validate()
         scenario.table.rows.size() == 8
         scenario.table.rows[0].entries[0].balance == 50000
         scenario.table.rows[1].entries[0].balance == 45000
@@ -104,15 +124,18 @@ class BPScenarioSpec extends Specification {
     }
 
     void "test two transactions, two accounts"() {
+        User user = new User()
         BPScenario scenario = new BPScenario(
                 startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31))
-        BPAccount account1 = new BPAccount(name:"Checking",balance: 50000)
-        BPAccount account2 = new BPAccount(name:"Savings",balance: 100000)
+                endDate: new Date(year: 2017,month: 12,date: 31),
+                name:"test",
+                description: "test",
+                user:user)
+        BPAccount account1 = new BPAccount(name:"Checking",balance: 50000,scenario: scenario)
+        BPAccount account2 = new BPAccount(name:"Savings",balance: 100000,scenario: scenario)
         scenario.accounts = []
-        scenario.accounts << account1 << account2
-        account1.scenario = scenario
-        account2.scenario = scenario
+        scenario.accounts << account1
+        scenario.accounts << account2
         scenario.transactions = []
         BPBudgetItem item1 = new BPBudgetItem(
                 name: "Cell Phone",
@@ -125,10 +148,12 @@ class BPScenarioSpec extends Specification {
                 amount: 10000,
                 fromAccount:account1,
                 toAccount:account2)
-        scenario.transactions << item1 << item2
+        scenario.transactions << item1
+        scenario.transactions << item2
         scenario.populateTable()
         scenario.generators = []
         expect:
+        scenario.validate()
         scenario.table.rows.size() == 3
         scenario.table.rows[0].entries.find {it.name=="Checking"}.balance == 50000
         scenario.table.rows[0].entries.find {it.name=="Savings"}.balance == 100000

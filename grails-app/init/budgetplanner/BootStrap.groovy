@@ -3,6 +3,7 @@ package budgetplanner
 class BootStrap {
 
     def init = { servletContext ->
+        // ADMIN USER
         User user = new User(
                 name: "admin",
                 username: "admin",
@@ -13,32 +14,12 @@ class BootStrap {
                 budgetItems: [],
                 budgetItemGenerators: []
         )
-        BPScenario scenario = new BPScenario(
-                name: "test",
-                description: "blah",
-                startDate: new Date(),
-                endDate: new Date()+100,
-                user:user,
-                accounts:[],
-                transactions: [],
-                generators: []
-        )
-        BPAccount account = new BPAccount(
-                name: "checking",
-                type: budgetplanner.AccountType.CHECKING,
-                balance: 100,
-                user: user,
-                scenario: scenario
-        )
-
-        scenario.accounts << account
-        user.accounts << account
-        user.scenarios << scenario
         user.save(flush:true)
         Role role = new Role(authority: Role.ROLE_ADMIN)
         role.save(flush:true)
         UserRole.create(user,role)
 
+        // EXAMPLE USER
         User user2 = new User(
                 name: "user",
                 username: "user",
@@ -51,10 +32,10 @@ class BootStrap {
         )
         user2.save(flush:true)
         BPScenario scenario2 = new BPScenario(
-                name: "test2",
-                description: "blah2",
-                startDate: new Date(),
-                endDate: new Date()+100,
+                name: "Main",
+                description: "Current Budget",
+                startDate: new Date(year:2017,month:0,date:1),
+                endDate: new Date(year:2017,month:11,date:31),
                 user: user2,
                 accounts: [],
                 transactions: [],
@@ -64,8 +45,8 @@ class BootStrap {
 
         BPAccount account1 = new BPAccount(
                 name: "Checking",
-                type: budgetplanner.AccountType.CHECKING,
-                balance: 100000,
+                type: BPAccount.AccountType.CHECKING,
+                balance: 300000,
                 user: user2,
                 scenario: scenario2
         )
@@ -77,7 +58,7 @@ class BootStrap {
 
         BPAccount account2 = new BPAccount(
                 name: "Savings",
-                type: budgetplanner.AccountType.SAVINGS,
+                type: BPAccount.AccountType.SAVINGS,
                 balance: 500000,
                 user: user2,
                 scenario: scenario2
@@ -91,9 +72,9 @@ class BootStrap {
         BPBudgetItem item1 = new BPBudgetItem(
                 user: user2,
                 scenario: scenario2,
-                name: "Cell Phone",
-                date: new Date()+10,
-                amount: 3000,
+                name: "Taxes",
+                date: new Date(year:2017,month:3,date:1),
+                amount: 30000,
                 fromAccount: account1
         )
         item1.save flush: true
@@ -106,11 +87,10 @@ class BootStrap {
         BPBudgetItem item2 = new BPBudgetItem(
                 user: user2,
                 scenario: scenario2,
-                name: "Savings Transfer",
-                date: new Date()+14,
-                amount: 5000,
-                fromAccount: account1,
-                toAccount: account2
+                name: "Side Job",
+                date: new Date(year:2017,month:5,date:1),
+                amount: 50000,
+                toAccount: account1
         )
         item2.save flush: true
 
@@ -119,27 +99,55 @@ class BootStrap {
         user2.budgetItems << item2
         user2.save flush: true
 
-        scenario2.save flush: true
-        user2.save(flush:true)
-
-        BPBudgetItemGenerator item3 = new BPBudgetItemGenerator(
-                user: user2,
+        BPBudgetItemGenerator generator = new BPBudgetItemGenerator(
+                name: "Transfer",
+                startDate: new Date(year:2017,month:0,date:14),
+                endDate: new Date(year:2017,month:11,date:14),
+                intervalValue: 2,
+                intervalType: BPBudgetItemGenerator.IntervalType.WEEK,
+                amount: 10000,
                 scenario: scenario2,
-                name: "Savings Transfer2",
-                startDate: new Date()+14,
-                endDate: new Date()+100,
+                fromAccount: account1,
+                toAccount: account2,
+                user: user2
+        )
+        generator.save flush:true
+        scenario2.generators << generator
+        scenario2.save flush:true
+        user2.budgetItemGenerators << generator
+
+
+        BPBudgetItemGenerator generator2 = new BPBudgetItemGenerator(
+                name: "Income",
+                startDate: new Date(year:2017,month:0,date:14),
+                endDate: new Date(year:2017,month:11,date:14),
+                intervalValue: 2,
+                intervalType: BPBudgetItemGenerator.IntervalType.WEEK,
+                amount: 200000,
+                scenario: scenario2,
+                toAccount: account1,
+                user: user2
+        )
+        generator2.save flush:true
+        scenario2.generators << generator2
+        scenario2.save flush:true
+        user2.budgetItemGenerators << generator2
+
+        BPBudgetItemGenerator generator3 = new BPBudgetItemGenerator(
+                name: "Rent",
+                startDate: new Date(year:2017,month:0,date:1),
+                endDate: new Date(year:2017,month:11,date:1),
                 intervalValue: 1,
                 intervalType: BPBudgetItemGenerator.IntervalType.MONTH,
-                amount: 5000,
+                amount: 100000,
+                scenario: scenario2,
                 fromAccount: account1,
-                toAccount: account2
+                user: user2
         )
-        item3.save flush: true
-
-        scenario2.generators << item3
+        generator3.save flush:true
+        scenario2.generators << generator3
         scenario2.save flush:true
-        user2.budgetItemGenerators << item3
-        user2.save flush: true
+        user2.budgetItemGenerators << generator3
 
         user2.scenarios << scenario2
         user2.save flush: true

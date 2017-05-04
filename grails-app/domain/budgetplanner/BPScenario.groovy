@@ -15,7 +15,7 @@ class BPScenario {
         // Generate and sort transactions
         BPBudgetItem[] allTransactions = []
         transactions.each { allTransactions += it }
-        generators.each { allTransactions += it.getBudgetItems() }
+        generators.each { allTransactions += it.budgetItems() }
         allTransactions = allTransactions.sort {a,b -> a.date <=> b.date ?: a.name <=> b.name}
 
         // Loop over transactions and generate rows
@@ -25,7 +25,6 @@ class BPScenario {
                 date:startDate,
                 name:"ScenarioStart",
                 amount: 0,
-                tags:[],
                 table:table,
                 entries: []
         )

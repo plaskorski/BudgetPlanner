@@ -5,17 +5,15 @@
         <title>Scenarios</title>
     </head>
     <body>
-        <div class="container-fluid">
+        <div class="container">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2>Scenarios</h2>
+                    <h2>Scenarios
+                        <g:link controller="BPScenario" action="create" params="['user.id': userId]">
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                        </g:link>
+                    </h2>
                 </div>
-                <div class="panel-body">
-                    <div class="btn-group" role="group" aria-label="buttons">
-                        <button type="button" class="btn btn-primary">Create</button>
-                        <button type="button" class="btn btn-default" disabled="disabled">Delete</button>
-                        <button type="button" class="btn btn-default" disabled="disabled">Compare</button>
-                    </div>
                     <table class="table table-hover table-responsive">
                         <theader>
                             <tr>
@@ -28,6 +26,7 @@
                                 <th class="hidden-xs">Accounts</th>
                                 <th class="hidden-xs">Single Transactions</th>
                                 <th class="hidden-xs">Repeat Transactions</th>
+                                <th></th>
                             </tr>
                         </theader>
                         <tbody>
@@ -50,11 +49,16 @@
                                 <td class="hidden-xs">${scenario.accounts.size()}</td>
                                 <td class="hidden-xs">${scenario.transactions.size()}</td>
                                 <td class="hidden-xs">${scenario.generators.size()}</td>
+                                <td>
+                                    <g:form controller="BPScenario" action="delete" id="${scenario.id}" method="post">
+                                        <input type="hidden" name="_method" value="DELETE" id="_method" />
+                                        <button type="submit" class="btn btn-default btn-sm" onclick="return confirm('Are you sure?');"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                    </g:form>
+                                </td>
                             </tr>
                         </g:each>
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
     </body>

@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'BPAccount.label', default: 'BPAccount')}" />
-        <title><g:message code="default.edit.label" args="[entityName]" /></title>
-    </head>
-    <body>
-        <a href="#edit-BPAccount" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-        <div id="edit-BPAccount" class="content scaffold-edit" role="main">
-            <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-            </g:if>
-            <g:hasErrors bean="${this.BPAccount}">
-            <ul class="errors" role="alert">
-                <g:eachError bean="${this.BPAccount}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-                </g:eachError>
-            </ul>
-            </g:hasErrors>
-            <g:form resource="${this.BPAccount}" method="PUT">
-                <g:hiddenField name="version" value="${this.BPAccount?.version}" />
-                <fieldset class="form">
-                    <f:all bean="BPAccount"/>
-                </fieldset>
-                <fieldset class="buttons">
-                    <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
-                </fieldset>
-            </g:form>
-        </div>
-    </body>
+<head>
+    <meta name="layout" content="main" />
+    <title>Edit Account</title>
+</head>
+<body>
+<div class="container-fluid">
+
+    <g:form controller="BPAccount" action="update" id="${BPAccount.id}" method="post">
+        <input type="hidden" name="_method" value="PUT" id="_method" />
+        <fieldset class="form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="${BPAccount.name}">
+            </div>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select name="type" required="" id="type" value="${BPAccount.type}">
+                    <option value="SAVINGS" >SAVINGS</option>
+                    <option value="CHECKING" >CHECKING</option>
+                    <option value="LOAN" >LOAN</option>
+                    <option value="CREDIT" >CREDIT</option>
+                    <option value="ASSET" >ASSET</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="balance">Balance</label>
+                <input type="text" class="form-control" id="balance" name="balance" placeholder="Balance" value="${BPAccount.balance}">
+            </div>
+
+        </fieldset>
+        <fieldset class="buttons">
+            <g:submitButton name="save" class="save btn" value="Update" />
+        </fieldset>
+    </g:form>
+
+</div>
+</body>
 </html>

@@ -20,10 +20,10 @@ class BPScenarioController {
                 def user = User.findById(userId)
                 if (user) {
                     if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
-                        respond BPScenario.list(), model: [BPScenarioCount: BPScenario.count()]
+                        respond BPScenario.list(), model: [BPScenarioCount: BPScenario.count(), userId:userId]
                     } else if (Role.ROLE_USER in user.authorities.collect { it.authority }) {
                         def items = user.scenarios
-                        respond items.toList(), model: [BPScenarioCount: items.size()]
+                        respond items.toList(), model: [BPScenarioCount: items.size(), userId:userId]
                     } else {
                         notFound()
                     }
@@ -112,7 +112,8 @@ class BPScenarioController {
             if (userId) {
                 def user = User.findById(userId)
                 if (user) {
-                    if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId != userId)) {
+                    def authorities = user.authorities.collect { it.authority }
+                    if (!(Role.ROLE_USER in authorities) | (BPScenario.userId != userId)) {
                         notFound()
                     }
                 } else {

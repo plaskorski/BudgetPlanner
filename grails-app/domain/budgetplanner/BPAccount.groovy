@@ -3,8 +3,16 @@ package budgetplanner
 class BPAccount {
 
     String name
-    budgetplanner.AccountType type
+    AccountType type
     Integer balance
+
+    enum AccountType {
+        SAVINGS,
+        CHECKING,
+        LOAN,
+        CREDIT,
+        ASSET
+    }
 
     static belongsTo = [scenario:BPScenario,user:User]
 

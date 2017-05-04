@@ -18,11 +18,9 @@ class BPBudgetItemGenerator {
     BPAccount fromAccount
     BPAccount toAccount
 
-    static transients = ["budgetItems"]
+    static belongsTo = [scenario:BPScenario, user:User]
 
-    static belongsTo = [scenario:BPScenario,user:User]
-
-    BPBudgetItem[] getBudgetItems() {
+    def budgetItems() {
 
         def items = []
 

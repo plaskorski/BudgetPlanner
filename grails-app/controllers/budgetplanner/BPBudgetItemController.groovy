@@ -126,9 +126,9 @@ class BPBudgetItemController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'BPBudgetItem.label', default: 'BPBudgetItem'), BPBudgetItem.id])
-                redirect BPBudgetItem
+                redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id
             }
-            '*' { respond BPBudgetItem, [status: CREATED] }
+            '*' { redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id }
         }
     }
 
@@ -186,9 +186,9 @@ class BPBudgetItemController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'BPBudgetItem.label', default: 'BPBudgetItem'), BPBudgetItem.id])
-                redirect BPBudgetItem
+                redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id
             }
-            '*'{ respond BPBudgetItem, [status: OK] }
+            '*'{ redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id }
         }
     }
 
@@ -222,9 +222,9 @@ class BPBudgetItemController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'BPBudgetItem.label', default: 'BPBudgetItem'), BPBudgetItem.id])
-                redirect action:"index", method:"GET"
+                redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id
             }
-            '*'{ render status: NO_CONTENT }
+            '*'{ redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id }
         }
     }
 

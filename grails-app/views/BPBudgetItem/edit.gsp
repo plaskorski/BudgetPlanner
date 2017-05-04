@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'BPBudgetItem.label', default: 'BPBudgetItem')}" />
-        <title><g:message code="default.edit.label" args="[entityName]" /></title>
-    </head>
-    <body>
-        <a href="#edit-BPBudgetItem" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-                <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-            </ul>
-        </div>
-        <div id="edit-BPBudgetItem" class="content scaffold-edit" role="main">
-            <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-            </g:if>
-            <g:hasErrors bean="${this.BPBudgetItem}">
-            <ul class="errors" role="alert">
-                <g:eachError bean="${this.BPBudgetItem}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-                </g:eachError>
-            </ul>
-            </g:hasErrors>
-            <g:form resource="${this.BPBudgetItem}" method="PUT">
-                <g:hiddenField name="version" value="${this.BPBudgetItem?.version}" />
-                <fieldset class="form">
-                    <f:all bean="BPBudgetItem"/>
-                </fieldset>
-                <fieldset class="buttons">
-                    <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
-                </fieldset>
-            </g:form>
-        </div>
-    </body>
+<head>
+    <meta name="layout" content="main" />
+    <title>Edit One-Time Transaction</title>
+</head>
+<body>
+<div class="container-fluid">
+    <g:form controller="BPBudgetItem" action="update" id="${BPBudgetItem.id}" method="post">
+        <input type="hidden" name="_method" value="PUT" id="_method" />
+        <fieldset class="form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="${BPBudgetItem.name}">
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <g:datePicker name="date" precision="day" value="${BPBudgetItem.date}" />
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" value="${BPBudgetItem.amount}">
+            </div>
+            <div class="form-group">
+                <label for="fromAccount">FromAccount</label>
+                <g:select name="fromAccount" from="${BPBudgetItem.scenario.accounts}" value="${BPBudgetItem.fromAccount?.id}" optionKey="id" optionValue="name" noSelection="${['null':'NA']}" />
+            </div>
+            <div class="form-group">
+                <label for="toAccount">ToAccount</label>
+                <g:select name="toAccount" from="${BPBudgetItem.scenario.accounts}"  value="${BPBudgetItem.toAccount?.id}" optionKey="id" optionValue="name" noSelection="${['null':'NA']}" />
+            </div>
+            <input type="hidden" class="form-control" name="user.id" id="user" placeholder="User" value="${BPBudgetItem.user.id}">
+            <input type="hidden" class="form-control" name="scenario.id" id="scenario" placeholder="Scenario" value="${BPBudgetItem.scenario.id}">
+        </fieldset>
+        <fieldset class="buttons">
+            <g:submitButton name="create" class="save btn" value="Create" />
+        </fieldset>
+    </g:form>
+</div>
+</body>
 </html>
