@@ -5,8 +5,13 @@
     <title>Edit Account</title>
 </head>
 <body>
-<div class="container-fluid">
-
+<div class="container col-md-4"></div>
+<div class="container col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Edit Account</h4>
+        </div>
+        <div class="panel panel-body">
     <g:form controller="BPAccount" action="update" id="${BPAccount.id}" method="post">
         <input type="hidden" name="_method" value="PUT" id="_method" />
         <fieldset class="form">
@@ -34,7 +39,8 @@
             <g:submitButton name="save" class="save btn" value="Update" />
         </fieldset>
     </g:form>
-
+        </div>
 </div>
+<div class="container col-md-4"></div>
 </body>
 </html>

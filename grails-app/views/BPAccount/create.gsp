@@ -5,8 +5,13 @@
     <title>Create Account</title>
 </head>
 <body>
-<div class="container-fluid">
-
+<div class="container col-md-4"></div>
+<div class="container col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Create Account</h4>
+        </div>
+        <div class="panel panel-body">
     <g:form controller="BPAccount" action="save" method="post">
         <fieldset class="form">
             <div class="form-group">
@@ -35,7 +40,9 @@
             <g:submitButton name="create" class="save btn" value="Create" />
         </fieldset>
     </g:form>
-
+        </div>
+    </div>
 </div>
+<div class="container col-md-4"></div>
 </body>
 </html>

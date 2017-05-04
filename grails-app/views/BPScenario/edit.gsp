@@ -5,8 +5,13 @@
     <title>Edit Scenario</title>
 </head>
 <body>
-<div class="container-fluid">
-
+<div class="container col-md-4"></div>
+<div class="container col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Edit Scenario</h4>
+        </div>
+        <div class="panel panel-body">
     <g:form controller="BPScenario" action="update" id="${BPScenario.id}" method="post">
         <input type="hidden" name="_method" value="PUT" id="_method" />
         <fieldset class="form">
@@ -20,18 +25,20 @@
             </div>
             <div class="form-group">
                 <label for="startDate">Start Date</label>
-                <g:datePicker name="startDate" value="${BPScenario.startDate}" precision="day" noSelection="['':'-Choose-']"/>
+                <joda:datePicker name="startDate" value="${BPScenario.startDate}"/>
             </div>
             <div class="form-group">
                 <label for="endDate">End Date</label>
-                <g:datePicker name="endDate" value="${BPScenario.endDate}" precision="day" noSelection="['':'-Choose-']"/>
+                <joda:datePicker name="endDate" value="${BPScenario.endDate}"/>
             </div>
         </fieldset>
         <fieldset class="buttons">
             <g:submitButton name="save" class="save btn" value="Update" />
         </fieldset>
     </g:form>
-
+        </div>
+    </div>
 </div>
+<div class="container col-md-4"></div>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package budgetplanner
 
+import org.joda.time.LocalDate
+
 class BPBudgetItemGenerator {
 
     enum IntervalType {
@@ -10,8 +12,8 @@ class BPBudgetItemGenerator {
     }
 
     String name
-    Date startDate
-    Date endDate
+    LocalDate startDate
+    LocalDate endDate
     Integer intervalValue
     IntervalType intervalType
     Integer amount
@@ -25,11 +27,11 @@ class BPBudgetItemGenerator {
         def items = []
 
         BPBudgetItem item
-        Date date = startDate
+        LocalDate date = startDate
 
         while (true) {
 
-            if (date.after(endDate)) {break}
+            if (date.isAfter(endDate)) {break}
 
             item = new BPBudgetItem(
                     name: name,
@@ -42,25 +44,20 @@ class BPBudgetItemGenerator {
             )
             items << item
 
-            Calendar cal = Calendar.getInstance()
-            cal.setTime(date)
-            def intType = Calendar.DATE
-            def intValue = intervalValue
             switch (intervalType) {
                 case IntervalType.DAY:
+                    date = date.plusDays(intervalValue)
                     break
                 case IntervalType.WEEK:
-                    intValue *= 7
+                    date = date.plusWeeks(intervalValue)
                     break
                 case IntervalType.MONTH:
-                    intType = Calendar.MONTH
+                    date = date.plusMonths(intervalValue)
                     break
                 case IntervalType.YEAR:
-                    intType = Calendar.YEAR
+                    date = date.plusYears(intervalValue)
                     break
             }
-            cal.add(intType, intValue)
-            date = cal.getTime()
         }
         items
     }
@@ -73,9 +70,9 @@ class BPBudgetItemGenerator {
             if (val) {
                 if (obj.scenario) {
                     if (obj.endDate) {
-                        val.compareTo(obj.scenario.startDate) >= 0 & val.compareTo(obj.scenario.endDate) < 0 & val.compareTo(obj.endDate) <= 0
+                        ((val <=> obj.scenario.startDate) >= 0) & ((val <=> obj.scenario.endDate) < 0) & ((val <=> obj.endDate) <= 0)
                     } else {
-                        val.compareTo(obj.scenario.startDate) >= 0 & val.compareTo(obj.scenario.endDate) < 0
+                        ((val <=> obj.scenario.startDate) >= 0) & ((val <=> obj.scenario.endDate) < 0)
                     }
                 } else {false}
             } else {false}
@@ -84,9 +81,9 @@ class BPBudgetItemGenerator {
             if (val) {
                 if (obj.scenario) {
                     if (obj.startDate) {
-                        val.compareTo(obj.scenario.startDate) > 0 & val.compareTo(obj.scenario.endDate) <= 0 & val.compareTo(obj.startDate) > 0
+                        ((val <=> obj.scenario.startDate) > 0) & ((val <=> obj.scenario.endDate) <= 0) & ((val <=> obj.startDate) > 0)
                     } else {
-                        val.compareTo(obj.scenario.startDate) > 0 & val.compareTo(obj.scenario.endDate) <= 0
+                        ((val <=> obj.scenario.startDate) > 0) & ((val <=> obj.scenario.endDate) <= 0)
                     }
                 } else {false}
             } else {false}

@@ -1,9 +1,11 @@
 package budgetplanner
 
+import org.joda.time.LocalDate
+
 class BPBudgetItem {
 
     String name
-    Date date
+    LocalDate date
     Integer amount
     BPAccount fromAccount
     BPAccount toAccount
@@ -13,10 +15,8 @@ class BPBudgetItem {
     static constraints = {
         name nullable: false, emtpy: false
         date nullable: false, validator: {val, obj ->
-            if (obj.scenario) {
-                val.compareTo(obj.scenario.startDate) >= 0 &
-                        val.compareTo(obj.scenario.endDate) <= 0
-            } else {false}
+            if (obj.scenario) {((val <=> obj.scenario.startDate) >= 0) & ((val <=> obj.scenario.endDate) <= 0)}
+            else {false}
         }
         amount nullable: false, min:0
         scenario nullable: false

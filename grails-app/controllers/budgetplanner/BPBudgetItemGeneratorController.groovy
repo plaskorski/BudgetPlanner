@@ -46,7 +46,8 @@ class BPBudgetItemGeneratorController {
                     if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
                         respond BPBudgetItemGenerator
                     } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItemGenerator.userId == userId)) {
-                        respond BPBudgetItemGenerator
+                        redirect controller:"BPScenario", action:"show", id:BPBudgetItemGenerator.scenarioId
+                        //respond BPBudgetItemGenerator
                     } else {
                         notFound()
                     }
@@ -215,15 +216,16 @@ class BPBudgetItemGeneratorController {
                 notFound()
             }
         }
+        def scenario = BPBudgetItemGenerator.getScenarioId()
 
         BPBudgetItemGenerator.delete flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'BPBudgetItemGenerator.label', default: 'BPBudgetItemGenerator'), BPBudgetItemGenerator.id])
-                redirect action:"index", method:"GET"
+                redirect controller:"BPScenario", action:"show", id:scenario
             }
-            '*'{ render status: NO_CONTENT }
+            '*'{ redirect controller:"BPScenario", action:"show", id:scenario }
         }
     }
 

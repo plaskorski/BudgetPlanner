@@ -4,6 +4,8 @@ import grails.test.mixin.TestFor
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import org.joda.time.LocalDate
+
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
@@ -29,29 +31,29 @@ class BPScenarioSpec extends Specification {
             output == result
 
         where:
-            name|description|startDate|endDate|user                    |ledger         |accounts                                        |transactions                                          |generators                                                              |result
-            "paul"|"some scenario"|new Date()|new Date()+100|new User() |new BPTable() |[]                                              |[]                                                    |[]                                                                      |true
-            "paul"|"some scenario"|new Date()|new Date()+100|new User() |new BPTable()     |(new HashSet<BPAccount>().add(new BPAccount())) |(new HashSet<BPBudgetItem>().add(new BPBudgetItem())) |(new HashSet<BPBudgetItemGenerator>().add(new BPBudgetItemGenerator())) |true
-            ""|"some scenario"|new Date()|new Date()+100|new User() |new BPTable()     |[]                                              |[]                                                    |[]                                                                      |false
-            null|"some scenario"|new Date()|new Date()+100|new User() |new BPTable()   |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|""|new Date()|new Date()+100|new User() |new BPTable()              |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|null|new Date()|new Date()+100|new User() |new BPTable()            |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|"some scenario"|new Date()|new Date()-100|new User() |new BPTable() |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|"some scenario"|null|new Date()+100|new User() |new BPTable()       |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|"some scenario"|new Date()|null|new User() |new BPTable()           |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|"some scenario"|new Date()|new Date()+100|null |new BPTable()       |[]                                              |[]                                                    |[]                                                                      |false
-            "paul"|"some scenario"|new Date()|new Date()+100|new User() |null          |[]                                              |[]                                                    |[]                                                                      |true
-            "paul"|"some scenario"|new Date()|new Date()+100|new User() |new BPTable() |null                                            |[]                                                    |[]                                                                      |true
-            "paul"|"some scenario"|new Date()|new Date()+100|new User() |new BPTable() |[]                                              |null                                                  |[]                                                                      |true
-            "paul"|"some scenario"|new Date()|new Date()+100|new User() |new BPTable() |[]                                              |[]                                                    |null                                                                    |true
+            name|description|startDate                                  |endDate                                |user       |ledger        |accounts                                        |transactions                                          |generators                                                              |result
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1) |new LocalDate(2017, 12, 31) |new User() |new BPTable() |[]                                              |[]                                                    |[]                                                                      |true
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1) |new LocalDate(2017, 12, 31) |new User() |new BPTable() |(new HashSet<BPAccount>().add(new BPAccount())) |(new HashSet<BPBudgetItem>().add(new BPBudgetItem())) |(new HashSet<BPBudgetItemGenerator>().add(new BPBudgetItemGenerator())) |true
+            ""|"some scenario"|new LocalDate(2017, 1, 1)|new LocalDate(2017, 12, 31)|new User() |new BPTable()     |[]                                              |[]                                                    |[]                                                                      |false
+            null|"some scenario"|new LocalDate(2017, 1, 1)   |new LocalDate(2017, 12, 31)   |new User() |new BPTable() |[] |[] |[] |false
+            "paul"|""|new LocalDate(2017, 1, 1)              |new LocalDate(2017, 12, 31)   |new User() |new BPTable() |[] |[] |[] |false
+            "paul"|null|new LocalDate(2017, 1, 1)            |new LocalDate(2017, 12, 31)   |new User() |new BPTable() |[] |[] |[] |false
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1) |new LocalDate(2016, 1, 1) |new User() |new BPTable() |[] |[] |[] |false
+            "paul"|"some scenario"|null|new LocalDate(2017, 12, 31)|new User() |new BPTable()       |[]                                              |[]                                                    |[]                                                                      |false
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1)|null|new User() |new BPTable()           |[]                                              |[]                                                    |[]                                                                      |false
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1)|new LocalDate(2017, 12, 31)|null |new BPTable()       |[]                                              |[]                                                    |[]                                                                      |false
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1)|new LocalDate(2017, 12, 31)|new User() |null          |[]                                              |[]                                                    |[]                                                                      |true
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1)|new LocalDate(2017, 12, 31)|new User() |new BPTable() |null                                            |[]                                                    |[]                                                                      |true
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1)|new LocalDate(2017, 12, 31)|new User() |new BPTable() |[]                                              |null                                                  |[]                                                                      |true
+            "paul"|"some scenario"|new LocalDate(2017, 1, 1)|new LocalDate(2017, 12, 31)|new User() |new BPTable() |[]                                              |[]                                                    |null                                                                    |true
 
     }
 
     void "test one transaction"() {
         User user = new User()
         BPScenario scenario = new BPScenario(
-                startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31),
+                startDate: new LocalDate(2017, 1, 1),
+                endDate: new LocalDate(2017, 12, 31),
                 user: user,
                 name:"test",
                 description: "test")
@@ -65,7 +67,7 @@ class BPScenarioSpec extends Specification {
         scenario.transactions = []
         BPBudgetItem item = new BPBudgetItem(
                 name: "Cell Phone",
-                date: new Date(year: 2017,month: 6,date: 1),
+                date: new LocalDate(2017, 6, 1),
                 amount: 5000,
                 fromAccount:account,
                 user:user,
@@ -84,8 +86,8 @@ class BPScenarioSpec extends Specification {
     void "test transaction generator"() {
         User user = new User()
         BPScenario scenario = new BPScenario(
-                startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31),
+                startDate: new LocalDate(2017, 1, 1),
+                endDate: new LocalDate(2017, 12, 31),
                 user:user,
                 name:"test",
                 description: "test")
@@ -99,8 +101,8 @@ class BPScenarioSpec extends Specification {
         scenario.generators = []
         BPBudgetItemGenerator generator = new BPBudgetItemGenerator(
                 name: "Cell Phone",
-                startDate: new Date(year: 2017,month: 6,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31),
+                startDate: new LocalDate(2017, 6, 1),
+                endDate: new LocalDate(2017, 12, 31),
                 intervalValue: 1,
                 intervalType: BPBudgetItemGenerator.IntervalType.MONTH,
                 amount: 5000,
@@ -126,8 +128,8 @@ class BPScenarioSpec extends Specification {
     void "test two transactions, two accounts"() {
         User user = new User()
         BPScenario scenario = new BPScenario(
-                startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31),
+                startDate: new LocalDate(2017, 1, 1),
+                endDate: new LocalDate(2017, 12, 31),
                 name:"test",
                 description: "test",
                 user:user)
@@ -139,12 +141,12 @@ class BPScenarioSpec extends Specification {
         scenario.transactions = []
         BPBudgetItem item1 = new BPBudgetItem(
                 name: "Cell Phone",
-                date: new Date(year: 2017,month: 6,date: 1),
+                date: new LocalDate(2017, 6, 1),
                 amount: 5000,
                 fromAccount:account1)
         BPBudgetItem item2 = new BPBudgetItem(
                 name: "Monthly Savings",
-                date: new Date(year: 2017,month: 6,date: 15),
+                date: new LocalDate(2017, 6, 15),
                 amount: 10000,
                 fromAccount:account1,
                 toAccount:account2)

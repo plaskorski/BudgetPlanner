@@ -47,7 +47,8 @@ class BPAccountController {
                     if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
                         respond BPAccount
                     } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPAccount.userId == userId)) {
-                        respond BPAccount
+                        redirect controller:"BPScenario", action:"show", id:BPAccount.scenarioId
+                        //respond BPAccount
                     } else {
                         notFound()
                     }
@@ -126,9 +127,9 @@ class BPAccountController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'BPAccount.label', default: 'BPAccount'), BPAccount.id])
-                redirect(controller: "BPScenario", action: "show", id: BPAccount.scenarioId, method:"GET")
+                redirect BPAccount
             }
-            '*' { redirect(controller: "BPScenario", action: "show", id: BPAccount.scenarioId, method:"GET") }
+            '*' { respond BPAccount, [status: CREATED] }
         }
     }
 
@@ -188,9 +189,9 @@ class BPAccountController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'BPAccount.label', default: 'BPAccount'), BPAccount.id])
-                redirect controller:"BPScenario",action:"show",id:BPAccount.scenario.id, method:"GET"
+                redirect BPAccount
             }
-            '*'{ redirect controller:"BPScenario",action:"show",id:BPAccount.scenario.id, method:"GET" }
+            '*'{ respond BPAccount, [status: OK] }
         }
     }
 
@@ -204,6 +205,10 @@ class BPAccountController {
         }
 
         if (springSecurityService) {
+
+            BPAccount.scenario?.accounts?.remove(BPAccount)
+            BPAccount.scenario?.save flush:true
+
             def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
             if (userId) {
                 def user = User.findById(userId)
@@ -218,19 +223,16 @@ class BPAccountController {
                 notFound()
             }
         }
-        def scenario = BPAccount.scenario
 
-        BPAccount.scenario.accounts.remove(BPAccount)
-        BPAccount.scenario.save flush:true
-
+        def scenario = BPAccount.getScenarioId()
         BPAccount.delete flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'BPAccount.label', default: 'BPAccount'), BPAccount.id])
-                redirect controller:"BPScenario", action:"show", id:scenario.id, method:"GET"
+                redirect controller:"BPScenario", action:"show", id:scenario
             }
-            '*'{ redirect controller:"BPScenario", action:"show", id:scenario.id, method:"GET" }
+            '*'{ redirect controller:"BPScenario", action:"show", id:scenario }
         }
     }
 

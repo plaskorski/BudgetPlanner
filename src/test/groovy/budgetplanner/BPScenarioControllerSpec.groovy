@@ -3,6 +3,8 @@ package budgetplanner
 import grails.test.mixin.*
 import spock.lang.*
 
+import org.joda.time.LocalDate
+
 @TestFor(BPScenarioController)
 @Mock(BPScenario)
 class BPScenarioControllerSpec extends Specification {
@@ -11,8 +13,8 @@ class BPScenarioControllerSpec extends Specification {
         assert params != null
         params["name"] = "TestItem"
         params["description"] = "test description"
-        params["startDate"] = new Date(year: 2017,month: 1,date: 1)
-        params["endDate"] = new Date(year: 2017,month: 12,date: 31)
+        params["startDate"] = new LocalDate(2017, 1, 1)
+        params["endDate"] = new LocalDate(2017, 12, 31)
         params["user"] = new User()
     }
 

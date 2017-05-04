@@ -47,7 +47,8 @@ class BPBudgetItemController {
                     if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
                         respond BPBudgetItem
                     } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPBudgetItem.userId == userId)) {
-                        respond BPBudgetItem
+                        redirect controller:"BPScenario", action:"show", id:BPBudgetItem.scenarioId
+                        //respond BPBudgetItem
                     } else {
                         notFound()
                     }
@@ -126,9 +127,9 @@ class BPBudgetItemController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'BPBudgetItem.label', default: 'BPBudgetItem'), BPBudgetItem.id])
-                redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id
+                redirect BPBudgetItem
             }
-            '*' { redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id }
+            '*' { respond BPBudgetItem, [status: CREATED] }
         }
     }
 
@@ -186,9 +187,9 @@ class BPBudgetItemController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'BPBudgetItem.label', default: 'BPBudgetItem'), BPBudgetItem.id])
-                redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id
+                redirect BPBudgetItem
             }
-            '*'{ redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id }
+            '*'{ respond BPBudgetItem, [status: OK] }
         }
     }
 
@@ -216,15 +217,18 @@ class BPBudgetItemController {
                 notFound()
             }
         }
-
+        def scenario = BPBudgetItem.getScenarioId()
         BPBudgetItem.delete flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'BPBudgetItem.label', default: 'BPBudgetItem'), BPBudgetItem.id])
-                redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id
+                redirect controller:"BPScenario", action:"show", id:scenario
             }
-            '*'{ redirect controller:"BPScenario", action:"show",id:BPBudgetItem.scenario.id }
+            '*'{
+                redirect controller:"BPScenario", action:"show", id:scenario
+                //render status: NO_CONTENT
+            }
         }
     }
 

@@ -28,7 +28,7 @@ class UserController {
                     if (Role.ROLE_ADMIN in loggedUser.authorities.collect { it.authority }) {
                         respond user
                     } else if (Role.ROLE_USER in loggedUser.authorities.collect { it.authority } & (user.id == userId)) {
-                        respond user
+                        redirect controller:"BPScenario", action:"index"
                     } else {
                         notFound()
                     }
@@ -49,7 +49,7 @@ class UserController {
     }
 
     @Transactional
-    @Secured([Role.ROLE_ANONYMOUS,Role.ROLE_USER,Role.ROLE_ADMIN])
+    @Secured([Role.ROLE_ANONYMOUS])
     def save(User user) {
         if (user == null) {
             transactionStatus.setRollbackOnly()
@@ -63,9 +63,12 @@ class UserController {
             return
         }
 
-        user.save flush: true, failOnError: true
+        user.save flush: true
+
         if (springSecurityService) {
-            UserRole.create user, Role.findByAuthority(Role.ROLE_USER)
+            if (!user.authorities.contains(Role.findByAuthority(Role.ROLE_USER))) {
+                UserRole.create user, Role.findByAuthority(Role.ROLE_USER)
+            }
         }
 
         request.withFormat {

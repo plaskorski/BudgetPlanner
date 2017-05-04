@@ -3,6 +3,8 @@ package budgetplanner
 import grails.test.mixin.*
 import spock.lang.*
 
+import org.joda.time.LocalDate
+
 @TestFor(UserController)
 @Mock(User)
 class UserControllerSpec extends Specification {
@@ -10,7 +12,7 @@ class UserControllerSpec extends Specification {
     def populateValidParams(params) {
         assert params != null
         params["name"] = "paul"
-        params["birthDate"] = new Date()
+        params["birthDate"] = new LocalDate(1986,6,1)
         params["username"] = "secretuser"
         params["password"] = "secretpassword"
     }

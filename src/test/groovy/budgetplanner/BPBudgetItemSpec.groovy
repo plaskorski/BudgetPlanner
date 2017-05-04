@@ -4,6 +4,8 @@ import grails.test.mixin.TestFor
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import org.joda.time.LocalDate
+
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
@@ -27,19 +29,19 @@ class BPBudgetItemSpec extends Specification {
         output == result
 
         where:
-        user|name|date|amount|scenario|fromAccount|toAccount|result
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |true
-        new User()|""|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|null|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|"rent"|null|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|"rent"|new Date(year:2018,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|null|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|-1|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|80000| null|new BPAccount(name:"1") |new BPAccount(name:"2") |false
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |new BPAccount(name:"1") |false
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|null |null |false
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|new BPAccount(name:"1") |null |true
-        new User()|"rent"|new Date(year:2017,month:6,date:1)|80000|new BPScenario(startDate: new Date(year:2017,month:1,date:1), endDate: new Date(year:2017,month: 12,date: 31))|null |new BPAccount(name:"2") |true
+        user|name|date                                      |amount |scenario                                                                                                         |fromAccount             |toAccount               |result
+        new User()|"rent"|new LocalDate(2017, 6, 1) |80000  |new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31)) |new BPAccount(name:"1") |new BPAccount(name:"2") |true
+        new User()|""|new LocalDate(2017, 6, 1)     |80000  |new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31)) |new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|null|new LocalDate(2017, 6, 1)   |80000  |new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31)) |new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|"rent"|null|80000|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))                               |new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|"rent"|new LocalDate(2018, 6, 1)|80000|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31)) |new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|"rent"|new LocalDate(2017, 6, 1)|null|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))  |new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|"rent"|new LocalDate(2017, 6, 1)|-1|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))|new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|"rent"|new LocalDate(2017, 6, 1)|80000| null|new BPAccount(name:"1") |new BPAccount(name:"2") |false
+        new User()|"rent"|new LocalDate(2017, 6, 1)|80000|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))|new BPAccount(name:"1") |new BPAccount(name:"1") |false
+        new User()|"rent"|new LocalDate(2017, 6, 1)|80000|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))|null |null |false
+        new User()|"rent"|new LocalDate(2017, 6, 1)|80000|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))|new BPAccount(name:"1") |null |true
+        new User()|"rent"|new LocalDate(2017, 6, 1)|80000|new BPScenario(startDate: new LocalDate(2017, 1, 1), endDate: new LocalDate(2017, 12, 31))|null |new BPAccount(name:"2") |true
     }
 
 }

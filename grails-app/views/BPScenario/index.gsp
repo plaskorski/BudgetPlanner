@@ -1,3 +1,4 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -44,8 +45,8 @@
                                     <th scope="row"><g:link action="show" id="${scenario.id}">${scenario.name}</g:link></th>
                                 </sec:ifNotGranted>
                                 <td>${scenario.description}</td>
-                                <td>${scenario.startDate.format("M/dd/yy")}</td>
-                                <td>${scenario.endDate.format("M/dd/yy")}</td>
+                                <td>${scenario.startDate.toString('M/dd/yy')}</td>
+                                <td>${scenario.endDate.toString('M/dd/yy')}</td>
                                 <td class="hidden-xs">${scenario.accounts.size()}</td>
                                 <td class="hidden-xs">${scenario.transactions.size()}</td>
                                 <td class="hidden-xs">${scenario.generators.size()}</td>

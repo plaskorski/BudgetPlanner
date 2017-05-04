@@ -4,6 +4,8 @@ import grails.test.mixin.TestFor
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import org.joda.time.LocalDate
+
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
@@ -25,13 +27,13 @@ class BPTableRowSpec extends Specification {
         output == result
 
         where:
-        date|name|amount|entries|table|result
-        new Date()|"Cell Phone"|4000|[]|new BPTable()|true
-        null|"Cell Phone"|4000|[]|new BPTable()|false
-        new Date()|null|4000|[]|new BPTable()|false
-        new Date()|""|4000|[]|new BPTable()|false
-        new Date()|"Cell Phone"|null|[]|new BPTable()|false
-        new Date()|"Cell Phone"|4000|[]|null|false
+        date                                 |name         |amount |entries |table         |result
+        new LocalDate(2017, 1, 1) |"Cell Phone" |4000   |[]      |new BPTable() |true
+        null                                 |"Cell Phone" |4000   |[]      |new BPTable() |false
+        new LocalDate(2017, 1, 1) |null         |4000   |[]      |new BPTable() |false
+        new LocalDate(2017, 1, 1) |""           |4000   |[]      |new BPTable() |false
+        new LocalDate(2017, 1, 1) |"Cell Phone" |null   |[]      |new BPTable() |false
+        new LocalDate(2017, 1, 1) |"Cell Phone" |4000   |[]      |null          |false
     }
 
 }

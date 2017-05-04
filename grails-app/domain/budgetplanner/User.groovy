@@ -3,6 +3,8 @@ package budgetplanner
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
+import org.joda.time.LocalDate
+
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
@@ -12,7 +14,7 @@ class User implements Serializable {
 	transient springSecurityService
 
 	String name
-	Date birthDate
+	LocalDate birthDate
 
 	String username
 	String password

@@ -1,7 +1,6 @@
 package budgetplanner
 
 import org.springframework.security.access.annotation.Secured
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 

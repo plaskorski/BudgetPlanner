@@ -1,11 +1,13 @@
 package budgetplanner
 
+import org.joda.time.LocalDate
+
 class BPScenario {
 
     String name
     String description
-    Date startDate
-    Date endDate
+    LocalDate startDate
+    LocalDate endDate
 
     void populateTable() {
 
@@ -13,13 +15,13 @@ class BPScenario {
         table = new BPTable(scenario:this)
 
         // Generate and sort transactions
-        BPBudgetItem[] allTransactions = []
-        transactions.each { allTransactions += it }
-        generators.each { allTransactions += it.budgetItems() }
-        allTransactions = allTransactions.sort {a,b -> a.date <=> b.date ?: a.name <=> b.name}
+        ArrayList<BPBudgetItem>  allTransactions = new ArrayList<>()
+        transactions.each { allTransactions.add(it) }
+        generators.each { it.budgetItems().each {val -> allTransactions.add(val)} }
+        allTransactions = allTransactions.sort {it.date}
 
         // Loop over transactions and generate rows
-        BPTableRow[] rows = []
+        ArrayList<BPTableRow> rows = new ArrayList<>()
         BPTableRow row
         BPTableRow prevRow = new BPTableRow(
                 date:startDate,
@@ -32,10 +34,10 @@ class BPScenario {
             BPTableRowBalance entry = new BPTableRowBalance(name: it.name, balance: it.balance)
             prevRow.entries << entry
         }
-        rows += prevRow
+        rows.add(prevRow)
         allTransactions.each {
             row = prevRow.getNextRow(it)
-            rows += row
+            rows.add(row)
             prevRow = row
         }
         table.rows = rows
@@ -55,7 +57,7 @@ class BPScenario {
         startDate nullable: false
         endDate nullable: false, validator: {val, obj ->
             if (obj.startDate) {
-                val.after(obj.startDate)
+                val.isAfter(obj.startDate)
             } else {false}
         }
         user nullable: false

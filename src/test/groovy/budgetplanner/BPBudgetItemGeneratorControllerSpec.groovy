@@ -3,6 +3,8 @@ package budgetplanner
 import grails.test.mixin.*
 import spock.lang.*
 
+import org.joda.time.LocalDate
+
 @TestFor(BPBudgetItemGeneratorController)
 @Mock(BPBudgetItemGenerator)
 class BPBudgetItemGeneratorControllerSpec extends Specification {
@@ -10,16 +12,16 @@ class BPBudgetItemGeneratorControllerSpec extends Specification {
     def populateValidParams(params) {
         assert params != null
         params["name"] = "TestItem"
-        params["startDate"] = new Date(year: 2017,month: 6,date: 1)
-        params["endDate"] = new Date(year: 2017,month: 12,date: 31)
+        params["startDate"] = new LocalDate(2017, 6, 1)
+        params["endDate"] = new LocalDate(2017, 12, 31)
         params["intervalType"] = BPBudgetItemGenerator.IntervalType.MONTH
         params["intervalValue"] = 1
         params["amount"] = 10000
         params["fromAccount"] = new BPAccount(name: "1")
         params["toAccount"] = new BPAccount(name: "2")
         params["scenario"] = new BPScenario(
-                startDate: new Date(year:2017,month: 1,date: 1),
-                endDate: new Date(year: 2017,month: 12,date: 31)
+                startDate: new LocalDate(2017, 1, 1),
+                endDate: new LocalDate(2017, 12, 31)
         )
         params["user"] = new User()
     }
@@ -155,7 +157,7 @@ class BPBudgetItemGeneratorControllerSpec extends Specification {
 
         then:"The instance is deleted"
             BPBudgetItemGenerator.count() == 0
-            response.redirectedUrl == '/BPBudgetItemGenerator/index'
+            response.redirectedUrl == '/BPScenario/show'
             flash.message != null
     }
 }

@@ -1,13 +1,16 @@
 package budgetplanner
 
+import org.joda.time.LocalDate
+
 class BootStrap {
 
     def init = { servletContext ->
         // ADMIN USER
+        LocalDate currDate = new LocalDate(1986,6,13)
         User user = new User(
                 name: "admin",
                 username: "admin",
-                birthDate: new Date(),
+                birthDate: currDate,
                 password: "secret",
                 scenarios: [],
                 accounts: [],
@@ -23,7 +26,7 @@ class BootStrap {
         User user2 = new User(
                 name: "user",
                 username: "user",
-                birthDate: new Date(),
+                birthDate: currDate,
                 password: "secret",
                 scenarios: [],
                 accounts: [],
@@ -31,11 +34,13 @@ class BootStrap {
                 budgetItemGenerators: []
         )
         user2.save(flush:true)
+        LocalDate startDate = new LocalDate(2017,1,1)
+        LocalDate endDate = new LocalDate(2017,12,31)
         BPScenario scenario2 = new BPScenario(
                 name: "Main",
                 description: "Current Budget",
-                startDate: new Date(year:2017,month:0,date:1),
-                endDate: new Date(year:2017,month:11,date:31),
+                startDate: startDate,
+                endDate: endDate,
                 user: user2,
                 accounts: [],
                 transactions: [],
@@ -73,7 +78,7 @@ class BootStrap {
                 user: user2,
                 scenario: scenario2,
                 name: "Taxes",
-                date: new Date(year:2017,month:3,date:1),
+                date: new LocalDate(2017,3,1),
                 amount: 30000,
                 fromAccount: account1
         )
@@ -88,7 +93,7 @@ class BootStrap {
                 user: user2,
                 scenario: scenario2,
                 name: "Side Job",
-                date: new Date(year:2017,month:5,date:1),
+                date: new LocalDate(2017,5,1),
                 amount: 50000,
                 toAccount: account1
         )
@@ -101,8 +106,8 @@ class BootStrap {
 
         BPBudgetItemGenerator generator = new BPBudgetItemGenerator(
                 name: "Transfer",
-                startDate: new Date(year:2017,month:0,date:14),
-                endDate: new Date(year:2017,month:11,date:14),
+                startDate: new LocalDate(2017,1,14),
+                endDate: new LocalDate(2017,12,14),
                 intervalValue: 2,
                 intervalType: BPBudgetItemGenerator.IntervalType.WEEK,
                 amount: 10000,
@@ -119,8 +124,8 @@ class BootStrap {
 
         BPBudgetItemGenerator generator2 = new BPBudgetItemGenerator(
                 name: "Income",
-                startDate: new Date(year:2017,month:0,date:14),
-                endDate: new Date(year:2017,month:11,date:14),
+                startDate: new LocalDate(2017,1,14),
+                endDate: new LocalDate(2017,12,14),
                 intervalValue: 2,
                 intervalType: BPBudgetItemGenerator.IntervalType.WEEK,
                 amount: 200000,
@@ -135,8 +140,8 @@ class BootStrap {
 
         BPBudgetItemGenerator generator3 = new BPBudgetItemGenerator(
                 name: "Rent",
-                startDate: new Date(year:2017,month:0,date:1),
-                endDate: new Date(year:2017,month:11,date:1),
+                startDate: new LocalDate(2017,1,1),
+                endDate: new LocalDate(2017,12,1),
                 intervalValue: 1,
                 intervalType: BPBudgetItemGenerator.IntervalType.MONTH,
                 amount: 100000,

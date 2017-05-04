@@ -1,38 +1,44 @@
+<%@ page import="org.joda.time.LocalDate" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
-        <title><g:message code="default.create.label" args="[entityName]" /></title>
-    </head>
-    <body>
-        <a href="#create-user" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-                <li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-            </ul>
+<head>
+    <meta name="layout" content="main" />
+    <title>Register</title>
+</head>
+<body>
+<div class="container col-md-4"></div>
+<div class="container col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Register</h4>
         </div>
-        <div id="create-user" class="content scaffold-create" role="main">
-            <h1><g:message code="default.create.label" args="[entityName]" /></h1>
-            <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-            </g:if>
-            <g:hasErrors bean="${this.user}">
-            <ul class="errors" role="alert">
-                <g:eachError bean="${this.user}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-                </g:eachError>
-            </ul>
-            </g:hasErrors>
-            <g:form action="save">
+        <div class="panel panel-body">
+            <g:form controller="User" action="save" method="post">
                 <fieldset class="form">
-                    <f:all bean="user"/>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <joda:datePicker name="birthDate" value="${new LocalDate()}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">User Name</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="User Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    </div>
                 </fieldset>
                 <fieldset class="buttons">
-                    <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
+                    <g:submitButton name="create" class="save btn" value="Create" />
                 </fieldset>
             </g:form>
         </div>
-    </body>
+    </div>
+</div>
+<div class="container col-md-4"></div>
+</body>
 </html>

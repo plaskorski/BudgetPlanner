@@ -121,7 +121,8 @@ class BPAccountControllerSpec extends Specification {
         then:"A redirect is issued to the show action"
             BPAccount != null
             response.redirectedUrl == "/BPAccount/show/$BPAccount.id"
-            flash.message != null
+
+        flash.message != null
     }
 
     void "Test that the delete action deletes an instance if it exists"() {
@@ -147,7 +148,7 @@ class BPAccountControllerSpec extends Specification {
 
         then:"The instance is deleted"
             BPAccount.count() == 0
-            response.redirectedUrl == '/BPAccount/index'
+            response.redirectedUrl == '/BPScenario/show'
             flash.message != null
     }
 }

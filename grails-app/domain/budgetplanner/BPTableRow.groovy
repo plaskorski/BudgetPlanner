@@ -1,8 +1,10 @@
 package budgetplanner
 
+import org.joda.time.LocalDate
+
 class BPTableRow {
 
-    Date date
+    LocalDate date
     String name
     Integer amount
     Integer[] getValues() { entries.sort {a,b->a.name<=>b.name}.collect {val -> val.balance} }

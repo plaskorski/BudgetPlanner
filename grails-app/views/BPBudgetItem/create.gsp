@@ -5,7 +5,13 @@
     <title>Create One-Time Transaction</title>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container col-md-4"></div>
+<div class="container col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Create One-Time Transaction</h4>
+        </div>
+        <div class="panel panel-body">
     <g:form controller="BPBudgetItem" action="save" method="post">
         <fieldset class="form">
             <div class="form-group">
@@ -14,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="date">Date</label>
-                <g:datePicker id="date" name="date" value="${BPBudgetItem.scenario.startDate}" precision="day" noSelection="['':'-Choose-']"/>
+                <joda:datePicker name="date" value="${BPBudgetItem.scenario.startDate}"/>
             </div>
             <div class="form-group">
                 <label for="amount">Amount</label>
@@ -35,6 +41,9 @@
             <g:submitButton name="create" class="save btn" value="Create" />
         </fieldset>
     </g:form>
+        </div>
+    </div>
 </div>
+<div class="container col-md-4"></div>
 </body>
 </html>

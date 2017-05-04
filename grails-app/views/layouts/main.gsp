@@ -11,7 +11,7 @@
     <g:layoutHead/>
 </head>
 <body>
-<nav class="navbar navbar-fixed-top navbar-inverse">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarText" aria-expanded="false">
@@ -39,20 +39,22 @@
                 <li><g:link class="nav-link" url="/tutorial">Tutorial</g:link></li>
             </sec:ifNotGranted>
         </ul>
+        <div class="container-fluid">
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <sec:ifLoggedIn>
                     <form name="logout" method="POST" action="${createLink(controller:'logout') }">
-                        <input type="submit" class="btn btn-link" value="Logout">
+                        <input type="submit" class="btn btn-default navbar-btn" value="Logout">
                     </form>
                 </sec:ifLoggedIn>
                 <sec:ifNotLoggedIn>
                     <form name="login" action="${createLink(controller:'login') }">
-                        <input type="submit" class="btn btn-link" value="Login">
+                        <input type="submit" class="btn btn-default navbar-btn" value="Login">
                     </form>
                 </sec:ifNotLoggedIn>
             </li>
         </ul>
+
     </div>
     </div>
 </nav>

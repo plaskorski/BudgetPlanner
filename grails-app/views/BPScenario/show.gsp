@@ -4,14 +4,13 @@
         <meta name="layout" content="main" />
         <title>Scenario View</title>
     </head>
-
     <div class="container-fluid">
         <div class="container-fluid col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>Overview
                         <g:link controller="BPScenario" action="edit" id="${BPScenario.id}">
-                            <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></button>
+                            <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil" aria-hidden="true" /></button>
                         </g:link>
                     </h4>
                 </div>
@@ -27,11 +26,11 @@
                             </tr>
                             <tr>
                                 <th scope="row">Start Date</th>
-                                <td>${BPScenario.startDate.format("M/dd/yy")}</td>
+                                <td>${BPScenario.startDate.toString('M/dd/yy')}</td>
                             </tr>
                             <tr>
                                 <th scope="row">End Date</th>
-                                <td>${BPScenario.endDate.format("M/dd/yy")}</td>
+                                <td>${BPScenario.endDate.toString('M/dd/yy')}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -71,7 +70,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${BPScenario.accounts}" var="account">
+                    <g:each in="${BPScenario.accounts.sort {it.id}}" var="account">
                         <tr>
                             <th scope="row">${account.name}</th>
                             <td>${account.type}</td>
@@ -119,10 +118,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${BPScenario.transactions}" var="transaction">
+                    <g:each in="${BPScenario.transactions.sort {it.id}}" var="transaction">
                         <tr>
                             <th scope="row">${transaction.name}</th>
-                            <td>${transaction.date.format("M/dd/yy")}</td>
+                            <td>${transaction.date.toString('M/dd/yy')}</td>
                             <td>${'$ '+String.format('%.2f',transaction.amount/100)}</td>
                             <td>${transaction.fromAccount?.name}</td>
                             <td>${transaction.toAccount?.name}</td>
@@ -162,11 +161,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${BPScenario.generators}" var="generator">
+                    <g:each in="${BPScenario.generators.sort {it.id}}" var="generator">
                         <tr>
                             <th scope="row">${generator.name}</th>
-                            <td>${generator.startDate.format("M/dd/yy")}</td>
-                            <td>${generator.endDate.format("M/dd/yy")}</td>
+                            <td>${generator.startDate.toString('M/dd/yy')}</td>
+                            <td>${generator.endDate.toString('M/dd/yy')}</td>
                             <td>${generator.intervalValue}</td>
                             <td>${generator.intervalType}</td>
                             <td>${'$ '+String.format('%.2f',generator.amount/100)}</td>
@@ -206,7 +205,7 @@
                         <tbody>
                         <g:each in="${BPScenario.table.rows}" var="row">
                             <tr>
-                                <th scope="row">${row.date.format("M/dd/yy")}</th>
+                                <th scope="row">${row.date.toString('M/dd/yy')}</th>
                                 <td>${row.name}</td>
                                 <td>${'$ '+String.format('%.2f',row.amount/100)}</td>
                                 <g:each in="${row.getValues()}" var="value">
