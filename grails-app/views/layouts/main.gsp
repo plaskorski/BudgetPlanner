@@ -8,6 +8,10 @@
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="fixedTop.css"/>
     <asset:stylesheet src="sticky-footer-navbar.css"/>
+    <asset:javascript src="jquery-2.2.0.min.js"/>
+    <asset:javascript src="bootstrap.min.js"/>
+    <asset:javascript src="plotly-latest.min.js"/>
+    <asset:javascript src="custom.js"/>
     <g:layoutHead/>
 </head>
 <body>
@@ -54,13 +58,10 @@
                 </sec:ifNotLoggedIn>
             </li>
         </ul>
-
+        </div>
     </div>
     </div>
 </nav>
 <g:layoutBody/>
-<asset:javascript src="jquery-2.2.0.min.js"/>
-<asset:javascript src="bootstrap.min.js"/>
-<asset:javascript src="custom.js"/>
 </body>
 </html>

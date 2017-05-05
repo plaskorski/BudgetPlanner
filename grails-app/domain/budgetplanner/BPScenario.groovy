@@ -51,6 +51,10 @@ class BPScenario {
                       transactions:BPBudgetItem,
                       generators:BPBudgetItemGenerator]
 
+    static mapping = {
+        table lazy: false
+    }
+
     static constraints = {
         name nullable: false, empty: false
         description nullable: false, empty: false

@@ -1,3 +1,5 @@
+//grails.converters.json.default.deep = true
+
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'budgetplanner.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'budgetplanner.UserRole'

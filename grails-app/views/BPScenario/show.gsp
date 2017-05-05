@@ -4,6 +4,7 @@
         <meta name="layout" content="main" />
         <title>Scenario View</title>
     </head>
+    <body>
     <div class="container-fluid">
         <div class="container-fluid col-md-4">
             <div class="panel panel-default">
@@ -44,7 +45,20 @@
                     <h4>Chart</h4>
                 </div>
                 <div class="panel-body">
-                    <p>This is where the budget chart goes</p>
+                    <ul class="nav nav-tabs" role="tablist" id="chartTabs">
+                        <g:each status="i" in="${BPScenario.table.accounts}" var="account">
+                            <li class="nav-item">
+                                <a class="nav-link${i==0 ? " active" : ""}" href="#chart_${account}" role="tab" data-toggle="tab">${account}</a>
+                            </li>
+                        </g:each>
+                    </ul>
+                    <div class="tab-content">
+                        <g:each in="${BPScenario.table.accounts}" var="account">
+                            <div role="tabpanel" class="tab-pane${i==0 ? " active" : ""}" id="chart_${account}">
+                                <div id="chart_${account}_window"></div>
+                            </div>
+                        </g:each>
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,5 +232,34 @@
                 </div>
             </div>
         </div>
+
+        <script>
+
+            //x= [];
+
+            $.getJSON( "${createLink(controller: "BPScenario",action:"table",id:BPScenario.id)}", function(data) {
+                //x = data;
+
+                // from https://plot.ly/javascript/getting-started/
+                $.each( data['accounts'], function( index, val ) {
+                    Plotly.plot( document.getElementById('chart_'+val+'_window'), [{
+                        x: data['date'],
+                        y: data[val] }], {
+                        margin: { t: 0 } } );
+                });
+
+                // from https://codepen.io/plotly/pres/wKpPvj
+                window.onresize = function() {
+                    $.each( data['accounts'], function( index, val ) {
+                        Plotly.Plots.resize(document.getElementById('chart_'+val+'_window'));
+                    });
+                };
+
+                // from http://getbootstrap.com/javascript/
+                $('#chartTabs a:first').tab('show');
+            });
+
+        </script>
+
     </body>
 </html>

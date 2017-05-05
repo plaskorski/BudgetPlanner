@@ -7,6 +7,7 @@ buildscript {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.11.6"
         classpath "org.grails.plugins:hibernate5:6.0.6"
+        classpath "org.grails.plugins:views-gradle:1.2.0"
     }
 }
 
@@ -19,6 +20,8 @@ apply plugin:"war"
 apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.grails-gsp"
 apply plugin:"asset-pipeline"
+apply plugin: "org.grails.grails-web"
+apply plugin: "org.grails.plugins.views-json"
 
 repositories {
     mavenLocal()
@@ -48,6 +51,7 @@ dependencies {
     compile "org.grails.plugins:spring-security-core:3.1.1"
     console "org.grails:grails-console"
     compile 'org.grails.plugins:joda-time:2.0.0'
+    compile "org.grails.plugins:views-json:1.2.0"
     profile "org.grails.profiles:web"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.11.6"
     runtime "com.h2database:h2"

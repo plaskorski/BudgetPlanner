@@ -1,5 +1,6 @@
 package budgetplanner
 
+import grails.converters.JSON
 import org.springframework.security.access.annotation.Secured
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -48,6 +49,32 @@ class BPScenarioController {
                         respond BPScenario
                     } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId == userId)) {
                         respond BPScenario
+                    } else {
+                        notFound()
+                    }
+                } else {
+                    notFound()
+                }
+            } else {
+                notFound()
+            }
+        } else {
+            respond BPScenario
+        }
+    }
+
+    def table(BPScenario BPScenario) {
+        BPScenario?.populateTable()
+        if (springSecurityService) {
+            def userId = springSecurityService.isLoggedIn() ? springSecurityService.getPrincipal()?.getId() : null
+            if (userId) {
+                def user = User.findById(userId)
+                if (user) {
+                    if (Role.ROLE_ADMIN in user.authorities.collect { it.authority }) {
+                        respond BPScenario
+                    } else if (Role.ROLE_USER in user.authorities.collect { it.authority } & (BPScenario.userId == userId)) {
+                        def renderMe = BPScenario.table.getColumns()
+                        render renderMe as JSON
                     } else {
                         notFound()
                     }
