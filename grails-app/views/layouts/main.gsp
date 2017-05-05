@@ -39,7 +39,7 @@
                     <li><g:link class="nav-link" controller="BPScenario" action="index">Scenarios</g:link></li>
                 </sec:ifLoggedIn>
                 <li><g:link class="nav-link" url="/about">About</g:link></li>
-                <li><g:link class="nav-link" url="/blog">Blog</g:link></li>
+                <li><g:link class="nav-link" url="/notes">Notes</g:link></li>
                 <li><g:link class="nav-link" url="/tutorial">Tutorial</g:link></li>
             </sec:ifNotGranted>
         </ul>

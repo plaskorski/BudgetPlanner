@@ -1,5 +1,3 @@
-//grails.converters.json.default.deep = true
-
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'budgetplanner.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'budgetplanner.UserRole'
@@ -11,10 +9,10 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/index.gsp',      access: ['permitAll']],
 	[pattern: '/about',          access: ['permitAll']],
 	[pattern: '/about.gsp',      access: ['permitAll']],
-	[pattern: '/blog',          access: ['permitAll']],
-	[pattern: '/blog.gsp',      access: ['permitAll']],
-	[pattern: '/tutorial',          access: ['permitAll']],
-	[pattern: '/tutorial.gsp',      access: ['permitAll']],
+	[pattern: '/notes',          access: ['permitAll']],
+	[pattern: '/notes.gsp',      access: ['permitAll']],
+	[pattern: '/tutorial',       access: ['permitAll']],
+	[pattern: '/tutorial.gsp',   access: ['permitAll']],
 	[pattern: '/shutdown',       access: ['permitAll']],
 	[pattern: '/assets/**',      access: ['permitAll']],
 	[pattern: '/**/js/**',       access: ['permitAll']],
