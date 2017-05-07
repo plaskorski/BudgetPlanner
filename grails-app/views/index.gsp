@@ -8,7 +8,10 @@
 <div class="container">
     <div class="jumbotron">
             <h1>Welcome to BudgetPlanner!</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>
+                BudgetPlanner is a web application that tracks your income and expenses, allowing you to create budgets
+                down to the daily level. Check out the tutorial section, or click Register to get started!
+            </p>
             <form name="register" action="${createLink(controller:'user',action:'create') }">
                 <input type="submit" class="btn btn-default btn-primary" value="Register">
             </form>

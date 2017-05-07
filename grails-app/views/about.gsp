@@ -8,8 +8,9 @@
 <div class="container">
     <div class="jumbotron">
         <h1>About BudgetPlanner</h1>
-        <h3>CSCI E-56 Final Project</h3>
-        <h4>A personal financial planning tool</h4>
+        <h3>A personal financial planning tool</h3>
+        <h4>CSCI E-56 Final Project</h4>
+        <h4>by Paul Laskorski</h4>
         <br/>
         <h4>Summary</h4>
         <br/>
