@@ -12,7 +12,7 @@ classes
 *.iws
 *.hprof
 idea
-.idea/*
+*.idea
 /lib
 /doc
 /cobertura.ser
